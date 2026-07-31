@@ -1,0 +1,3 @@
+# Use Vercel Blob for artwork image storage
+
+The site is expected to be image-heavy (up to 5 photos per Artwork), which made image hosting a real open question — Cloudinary was also considered for its transformation features. We chose Vercel Blob because we're already on Next.js/Vercel, and `next/image` already provides on-the-fly resizing and format conversion (WebP/AVIF), which covers the main reason to reach for Cloudinary. Vercel Blob's incremental pay-as-you-go pricing ($0.023/GB-month storage, $0.05/GB transfer) also avoids Cloudinary's steep free-to-paid cliff ($0 → $89/month). Revisit if image volume/traffic scales enough that a dedicated image CDN becomes worth the extra vendor.

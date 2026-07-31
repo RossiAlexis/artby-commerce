@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Database & tests
+
+This project uses [Neon](https://neon.tech) Postgres via [Drizzle ORM](https://orm.drizzle.team), with the `drizzle-orm/neon-serverless` (WebSocket) driver — required because parts of the app need real interactive transactions, which the `neon-http` driver doesn't support.
+
+1. Copy `.env.example` to `.env.local` and fill in:
+   - `DATABASE_URL` — pooled connection string (hostname has `-pooler` in it) for app runtime.
+   - `DIRECT_URL` — non-pooled connection string, used only for running migrations.
+   - `NEON_API_KEY` / `NEON_PROJECT_ID` — from Neon console → Account → Developer settings, used by the test harness to create/delete an ephemeral branch per test run.
+2. `pnpm db:generate` — generate a migration from `lib/db/schema.ts`.
+3. `pnpm db:migrate` — apply migrations to whatever `DIRECT_URL` currently points at.
+4. `pnpm test` — runs the integration suite. Before tests run, `test/setup/global-setup.ts` creates a fresh Neon branch off the project's default branch, migrates it, and points `DATABASE_URL`/`DIRECT_URL` at it for the duration of the run; the branch is deleted afterward. Tests call data-access functions directly against this real database — nothing is mocked.
+
+Neon's free plan caps a project at 10 branches, so if a test run is killed before teardown runs, delete the stray `test/run-*` branch manually (Neon console or `neonctl branches list` / `delete`).
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
