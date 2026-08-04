@@ -51,7 +51,11 @@ export function Gallery({
 
   return (
     <div>
-      <Tabs value={filter} onValueChange={handleFilterChange}>
+      <Tabs
+        value={filter}
+        onValueChange={handleFilterChange}
+        className="border-border border-b"
+      >
         <TabsList>
           {FILTERS.map(({ value, label }) => (
             <TabsTrigger key={value} value={value}>
@@ -65,7 +69,7 @@ export function Gallery({
           const heroPhoto = artwork.photos[0];
           return (
             <article key={artwork.id} className="bg-card">
-              <div className="bg-muted relative aspect-square overflow-hidden">
+              <div className="bg-muted relative aspect-[282/356] w-full">
                 {heroPhoto && (
                   <Image
                     src={heroPhoto.url}

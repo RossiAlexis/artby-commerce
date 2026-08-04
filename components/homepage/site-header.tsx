@@ -1,4 +1,5 @@
 import { ShoppingBag } from "lucide-react";
+import Link from "next/link";
 
 export function SiteHeader() {
   return (
@@ -7,11 +8,13 @@ export function SiteHeader() {
         Envío internacional incluido en todas las obras
       </div>
       <div className="border-border flex items-center justify-between border-b px-6 py-4 md:px-10">
-        <span className="font-serif text-lg">Art by Vero Miller</span>
-        <nav className="hidden items-center gap-8 text-sm md:flex">
-          <a href="#" className="nav-link">
+        <Link href="/" className="font-serif text-lg">
+          Art by Vero Miller
+        </Link>
+        <nav className="hidden items-end gap-8 text-sm md:flex">
+          <Link href="/galeria" className="nav-link">
             Galería
-          </a>
+          </Link>
           <a href="#" className="nav-link">
             Sobre Vero
           </a>
