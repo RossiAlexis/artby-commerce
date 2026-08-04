@@ -1,5 +1,23 @@
 import { getArtworks } from "@/lib/db/artworks";
 import { Gallery } from "./gallery";
+import Link from "next/link";
+
+const ArrowBack = () => (
+  <svg
+    width="9"
+    height="17"
+    viewBox="0 0 9 17"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M8.99868 15.938L7.95367 17L0.287675 9.21C0.103176 9.0197 0 8.76505 0 8.5C0 8.23495 0.103176 7.9803 0.287675 7.79L7.95367 0L8.99868 1.063L1.68067 8.5L8.99868 15.938Z"
+      fill="black"
+    />
+  </svg>
+);
 
 export default async function GaleriaPage(props: {
   searchParams?: Promise<{
@@ -12,7 +30,13 @@ export default async function GaleriaPage(props: {
 
   return (
     <div className="px-6 py-12 md:px-10">
-      <h1 className="font-heading mb-8 text-2xl">Galería</h1>
+      <Link
+        href="/"
+        className="font-heading mb-8 flex items-center gap-4 text-2xl"
+      >
+        <ArrowBack />
+        {"Galería"}
+      </Link>
       <Gallery
         key={filter}
         filter={filter}
