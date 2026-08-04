@@ -1,12 +1,3 @@
-type SiteFooterProps = {
-  socialLinks: Record<string, string>;
-  contactInfo: Record<string, string>;
-};
-
-function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
 export function SiteFooter() {
   return (
     <footer className="bg-foreground text-muted-foreground w-full px-6 py-10 md:px-10">
