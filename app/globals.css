@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Shadows+Into+Light&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Shadows+Into+Light&display=swap");
+@import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 /* @import 'tw-animate-css'; */
@@ -8,8 +8,8 @@
 
 @theme inline {
   --font-sans: var(--font-sans);
-  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
-  --font-display: 'Shadows Into Light', cursive;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --font-display: "Shadows Into Light", cursive;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -54,35 +54,24 @@
 
 :root {
   --radius: 0.625rem;
-  /* Base #FDF9F4 */
-  /* Text #1C1917 */
-  /* Surface #F0EBE3 */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Terracota #C27A5A */
-  --primary: oklch(0.205 0 0);
+  --primary: #c27a5a;
   --primary-foreground: oklch(0.985 0 0);
-  /* Terracota oscuro #993F17 */
   --primary-hover: oklch(0.484 0.131 41.7);
-  /* Surface #F0EBE3, reused */
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  /* Surface #F0EBE3, reused */
   --muted: oklch(0.97 0 0);
-  /* Mid #7C756F */
-  --muted-foreground: oklch(0.556 0 0);
-  /* Terracota claro #FCEBE3 */
+  --muted-foreground: oklch(51.028% 0.00006 271.152);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  /* Border #E2D8CE */
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  /* Terracota oscuro #993F17, matches --primary-hover */
-  --ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
+  --ring: oklch(0.484 0.131 41.7);
+  --background: #fdf9f4;
   --foreground: oklch(0.145 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -169,7 +158,7 @@ a {
   left: 50%;
   height: 2px;
   background: #688329;
-  content: '';
+  content: "";
   transition:
     right 180ms ease,
     left 180ms ease;
@@ -177,7 +166,7 @@ a {
 
 .nav-link:hover::after,
 .nav-link:focus-visible::after,
-.nav-link[aria-current='page']::after {
+.nav-link[aria-current="page"]::after {
   right: 0;
   left: 0;
 }
@@ -189,7 +178,8 @@ a {
   body {
     @apply bg-background text-foreground;
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
   html {

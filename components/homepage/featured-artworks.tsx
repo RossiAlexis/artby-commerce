@@ -1,0 +1,58 @@
+import Image from "next/image";
+import Link from "next/link";
+import type { getFeaturedArtworks } from "@/lib/db/artworks";
+
+type FeaturedArtwork = Awaited<ReturnType<typeof getFeaturedArtworks>>[number];
+
+function formatPrice(priceCents: number, currency: string) {
+  return `${currency} ${Math.round(priceCents / 100).toLocaleString("en-US")}`;
+}
+
+export function FeaturedArtworks({
+  artworks,
+}: {
+  artworks: FeaturedArtwork[];
+}) {
+  return (
+    <section className="px-6 py-16 md:px-10">
+      <div className="mb-8 flex items-center justify-between">
+        <span className="text-muted-foreground text-sm tracking-wide uppercase">
+          Obras disponibles
+        </span>
+        <Link
+          href="/gallery"
+          className="text-muted-foreground hover:text-foreground text-sm"
+        >
+          Ver todas →
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+        {artworks.map((artwork) => {
+          const heroPhoto = artwork.photos[0];
+          console.log(heroPhoto.url)
+          return (
+            <article key={artwork.id} className="bg-card">
+              <div className="bg-muted relative aspect-square overflow-hidden">
+                {heroPhoto && (
+                  <Image
+                    src={heroPhoto.url}
+                    alt={artwork.title}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                  />
+                )}
+              </div>
+              <div className="space-y-1 py-3 px-1.5">
+                <p className="text-sm font-medium ">{artwork.title}</p>
+                <p className="text-muted-foreground text-sm font-normal">
+                  {formatPrice(artwork.priceCents, artwork.currency)}
+                </p>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}

@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# design handoff assets — not used at runtime (see public/seed/ for served copies)
+/resources/homepage/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
