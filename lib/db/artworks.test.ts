@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getFeaturedArtworks } from "./artworks";
+import { getArtworks, getFeaturedArtworks } from "./artworks";
 import { db } from "./client";
 import { artworkPhotos, artworks } from "./schema";
 
@@ -91,5 +91,85 @@ describe("getFeaturedArtworks", () => {
     const result = await getFeaturedArtworks(4);
 
     expect(result).toHaveLength(4);
+  });
+});
+
+describe("getArtworks", () => {
+  it("returns only visible, available (unsold) artworks for the 'available' filter", async () => {
+    const available = await insertArtwork({ title: "Available" });
+    const sold = await insertArtwork({ title: "Sold", sold: true });
+    const hidden = await insertArtwork({ title: "Hidden", visible: false });
+
+    const { artworks: result } = await getArtworks("available");
+    const relevant = result.filter((artwork) =>
+      [available.id, sold.id, hidden.id].includes(artwork.id),
+    );
+
+    expect(relevant.map((artwork) => artwork.id)).toEqual([available.id]);
+  });
+
+  it("returns only visible, sold artworks for the 'sold' filter", async () => {
+    const available = await insertArtwork({ title: "Available" });
+    const sold = await insertArtwork({ title: "Sold", sold: true });
+    const hiddenSold = await insertArtwork({
+      title: "Hidden sold",
+      sold: true,
+      visible: false,
+    });
+
+    const { artworks: result } = await getArtworks("sold");
+    const relevant = result.filter((artwork) =>
+      [available.id, sold.id, hiddenSold.id].includes(artwork.id),
+    );
+
+    expect(relevant.map((artwork) => artwork.id)).toEqual([sold.id]);
+  });
+
+  it("returns all visible artworks regardless of sold status for the 'all' filter", async () => {
+    const available = await insertArtwork({ title: "Available" });
+    const sold = await insertArtwork({ title: "Sold", sold: true });
+    const hidden = await insertArtwork({ title: "Hidden", visible: false });
+
+    const { artworks: result } = await getArtworks("all", { pageSize: 1000 });
+    const relevant = result.filter((artwork) =>
+      [available.id, sold.id, hidden.id].includes(artwork.id),
+    );
+
+    expect(relevant.map((artwork) => artwork.id).sort((a, b) => a - b)).toEqual(
+      [available.id, sold.id].sort((a, b) => a - b),
+    );
+  });
+
+  it("includes the hero photo for each artwork", async () => {
+    const artwork = await insertArtwork({ title: "With photo" });
+    await db.insert(artworkPhotos).values([
+      { artworkId: artwork.id, url: "https://example.com/hero.jpg", position: 0 },
+      { artworkId: artwork.id, url: "https://example.com/second.jpg", position: 1 },
+    ]);
+
+    const { artworks: result } = await getArtworks("all", { pageSize: 1000 });
+    const found = result.find((item) => item.id === artwork.id);
+
+    expect(found?.photos).toEqual([
+      expect.objectContaining({ url: "https://example.com/hero.jpg", position: 0 }),
+    ]);
+  });
+
+  it("paginates results and reports whether more pages remain", async () => {
+    const inserted = [];
+    for (let i = 0; i < 5; i++) {
+      inserted.push(await insertArtwork({ title: `Page test ${i}` }));
+    }
+    // Newest ids sort first, so this test's own rows always land on the
+    // earliest pages regardless of what earlier tests already inserted.
+    const insertedIds = inserted.map((artwork) => artwork.id).reverse();
+
+    const firstPage = await getArtworks("all", { page: 1, pageSize: 5 });
+    expect(firstPage.artworks.map((artwork) => artwork.id)).toEqual(insertedIds);
+    expect(firstPage.hasMore).toBe(true);
+
+    const secondPage = await getArtworks("all", { page: 2, pageSize: 5 });
+    const secondPageIds = secondPage.artworks.map((artwork) => artwork.id);
+    expect(secondPageIds.some((id) => insertedIds.includes(id))).toBe(false);
   });
 });

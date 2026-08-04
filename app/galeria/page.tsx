@@ -1,21 +1,24 @@
 import { getArtworks } from "@/lib/db/artworks";
-import { TabsDemo } from "./tabsDemo";
+import { Gallery } from "./gallery";
 
 export default async function GaleriaPage(props: {
   searchParams?: Promise<{
     category?: string;
   }>;
 }) {
-  const searchparams = await props.searchParams;
-  const query = searchparams?.category || "available";
-  const arts = await getArtworks(query);
-
-  console.log(`los art work with filter ${query}`, arts);
+  const searchParams = await props.searchParams;
+  const filter = searchParams?.category || "available";
+  const { artworks, hasMore } = await getArtworks(filter);
 
   return (
-    <>
-      <h1>Galeria PAge</h1>
-      <TabsDemo selectedTab={query}></TabsDemo>
-    </>
+    <div className="px-6 py-12 md:px-10">
+      <h1 className="font-heading mb-8 text-2xl">Galería</h1>
+      <Gallery
+        key={filter}
+        filter={filter}
+        initialArtworks={artworks}
+        initialHasMore={hasMore}
+      />
+    </div>
   );
 }
