@@ -1,0 +1,28 @@
+name: Neon test-branch cleanup
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      max_age_hours:
+        description: "Delete test/run-* branches older than this many hours"
+        required: false
+        default: "3"
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsx scripts/ci/cleanup-stale-neon-branches.ts
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+          STALE_BRANCH_MAX_AGE_HOURS: ${{ inputs.max_age_hours }}

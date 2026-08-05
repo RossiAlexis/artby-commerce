@@ -35,6 +35,27 @@ export type TestBranch = {
   directUrl: string;
 };
 
+export type NeonBranch = {
+  id: string;
+  name: string;
+  createdAt: string;
+};
+
+/**
+ * Lists every branch on the project, not just ephemeral test branches —
+ * callers are responsible for filtering to the ones they care about.
+ */
+export async function listBranches(): Promise<NeonBranch[]> {
+  const result = await neonApi(`/projects/${projectId()}/branches`);
+  return result.branches.map(
+    (branch: { id: string; name: string; created_at: string }) => ({
+      id: branch.id,
+      name: branch.name,
+      createdAt: branch.created_at,
+    }),
+  );
+}
+
 /**
  * Creates an ephemeral branch (named per Neon's test-branch convention) off the
  * project's default branch, for the lifetime of one test run.
