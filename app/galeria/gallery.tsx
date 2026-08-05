@@ -6,16 +6,13 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getArtworks, type ArtworkListItem } from "@/lib/db/artworks";
+import { formatPrice } from "@/lib/utils";
 
 const FILTERS = [
   { value: "all", label: "Todas" },
   { value: "available", label: "Disponibles" },
   { value: "sold", label: "Vendidas" },
 ] as const;
-
-function formatPrice(priceCents: number, currency: string) {
-  return `${currency} ${Math.round(priceCents / 100).toLocaleString("en-US")}`;
-}
 
 export function Gallery({
   filter,
@@ -35,7 +32,7 @@ export function Gallery({
 
   function handleFilterChange(nextFilter: string) {
     const params = new URLSearchParams();
-    params.set("category", nextFilter);
+    params.set("status", nextFilter);
     router.push(`${pathname}?${params}`);
   }
 

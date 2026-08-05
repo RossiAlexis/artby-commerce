@@ -2,10 +2,8 @@
 import { and, desc, eq } from "drizzle-orm";
 import { db } from "./client";
 import { artworkPhotos, artworks } from "./schema";
-import z from "zod";
-
-const filterSchema = z.enum(["all", "available", "sold"]);
-const DEFAULT_PAGE_SIZE = 12;
+import { resolveArtworksFilter } from "./artworks-filter";
+import { resolvePage, resolvePageSize } from "./artworks-pagination";
 
 export async function getFeaturedArtworks(limit = 4) {
   return db.query.artworks.findMany({
@@ -23,9 +21,14 @@ export async function getFeaturedArtworks(limit = 4) {
 
 export async function getArtworks(
   filter: string,
-  { page = 1, pageSize = DEFAULT_PAGE_SIZE }: { page?: number; pageSize?: number } = {},
+  {
+    page: rawPage,
+    pageSize: rawPageSize,
+  }: { page?: number; pageSize?: number } = {},
 ) {
-  const resolvedFilter = filterSchema.safeParse(filter).data ?? "available";
+  const resolvedFilter = resolveArtworksFilter(filter);
+  const page = resolvePage(rawPage);
+  const pageSize = resolvePageSize(rawPageSize);
 
   const conditions = [eq(artworks.visible, true)];
   if (resolvedFilter === "available") conditions.push(eq(artworks.sold, false));
@@ -50,4 +53,6 @@ export async function getArtworks(
   };
 }
 
-export type ArtworkListItem = Awaited<ReturnType<typeof getArtworks>>["artworks"][number];
+export type ArtworkListItem = Awaited<
+  ReturnType<typeof getArtworks>
+>["artworks"][number];

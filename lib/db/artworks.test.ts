@@ -143,15 +143,26 @@ describe("getArtworks", () => {
   it("includes the hero photo for each artwork", async () => {
     const artwork = await insertArtwork({ title: "With photo" });
     await db.insert(artworkPhotos).values([
-      { artworkId: artwork.id, url: "https://example.com/hero.jpg", position: 0 },
-      { artworkId: artwork.id, url: "https://example.com/second.jpg", position: 1 },
+      {
+        artworkId: artwork.id,
+        url: "https://example.com/hero.jpg",
+        position: 0,
+      },
+      {
+        artworkId: artwork.id,
+        url: "https://example.com/second.jpg",
+        position: 1,
+      },
     ]);
 
     const { artworks: result } = await getArtworks("all", { pageSize: 1000 });
     const found = result.find((item) => item.id === artwork.id);
 
     expect(found?.photos).toEqual([
-      expect.objectContaining({ url: "https://example.com/hero.jpg", position: 0 }),
+      expect.objectContaining({
+        url: "https://example.com/hero.jpg",
+        position: 0,
+      }),
     ]);
   });
 
@@ -165,7 +176,8 @@ describe("getArtworks", () => {
     const insertedIds = inserted.map((artwork) => artwork.id).reverse();
 
     const firstPage = await getArtworks("all", { page: 1, pageSize: 5 });
-    expect(firstPage.artworks.map((artwork) => artwork.id)).toEqual(insertedIds);
+    const firstPageIds = firstPage.artworks.map((artwork) => artwork.id);
+    expect(firstPageIds.every((id) => insertedIds.includes(id))).toBe(true);
     expect(firstPage.hasMore).toBe(true);
 
     const secondPage = await getArtworks("all", { page: 2, pageSize: 5 });

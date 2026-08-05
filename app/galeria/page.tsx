@@ -1,5 +1,6 @@
+import { Gallery } from "@/app/galeria/gallery";
 import { getArtworks } from "@/lib/db/artworks";
-import { Gallery } from "./gallery";
+import { resolveArtworksFilter } from "@/lib/db/artworks-filter";
 import Link from "next/link";
 
 const ArrowBack = () => (
@@ -21,11 +22,11 @@ const ArrowBack = () => (
 
 export default async function GaleriaPage(props: {
   searchParams?: Promise<{
-    category?: string;
+    status?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const filter = searchParams?.category || "available";
+  const filter = resolveArtworksFilter(searchParams?.status);
   const { artworks, hasMore } = await getArtworks(filter);
 
   return (
