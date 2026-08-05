@@ -1,12 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { getFeaturedArtworks } from "@/lib/db/artworks";
+import { formatPrice } from "@/lib/utils";
 
 type FeaturedArtwork = Awaited<ReturnType<typeof getFeaturedArtworks>>[number];
-
-function formatPrice(priceCents: number, currency: string) {
-  return `${currency} ${Math.round(priceCents / 100).toLocaleString("en-US")}`;
-}
 
 export function FeaturedArtworks({
   artworks,
@@ -29,7 +26,7 @@ export function FeaturedArtworks({
       <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
         {artworks.map((artwork) => {
           const heroPhoto = artwork.photos[0];
-          console.log(heroPhoto.url)
+          console.log(heroPhoto.url);
           return (
             <article key={artwork.id} className="bg-card">
               <div className="bg-muted relative aspect-square overflow-hidden">
@@ -43,8 +40,8 @@ export function FeaturedArtworks({
                   />
                 )}
               </div>
-              <div className="space-y-1 py-3 px-1.5">
-                <p className="text-sm font-medium ">{artwork.title}</p>
+              <div className="space-y-1 px-1.5 py-3">
+                <p className="text-sm font-medium">{artwork.title}</p>
                 <p className="text-muted-foreground text-sm font-normal">
                   {formatPrice(artwork.priceCents, artwork.currency)}
                 </p>
