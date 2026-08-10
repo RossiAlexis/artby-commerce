@@ -1,7 +1,10 @@
-import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import { getCurrentCart } from "@/app/actions/cart";
+import { CartDrawer } from "@/components/cart/cart-drawer";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const cart = await getCurrentCart();
+
   return (
     <header>
       <div className="bg-foreground text-background py-2 text-center text-xs">
@@ -23,7 +26,7 @@ export function SiteHeader() {
           </a>
         </nav>
         <div className="text-muted-foreground flex items-center gap-4 text-xs">
-          <ShoppingBag className="size-4" aria-hidden />
+          <CartDrawer cart={cart} />
           <span>USD</span>
           <span>·</span>
           <span>ES · EN</span>

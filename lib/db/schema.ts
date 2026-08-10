@@ -9,6 +9,7 @@ import {
   smallint,
   text,
   timestamp,
+  unique,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -32,6 +33,13 @@ export const artworks = pgTable("artworks", {
   visible: boolean("visible").notNull().default(true),
   featured: boolean("featured").notNull().default(false),
   featuredAt: timestamp("featured_at", { withTimezone: true }),
+  // Transient hold created by adding this Artwork to a Cart (see
+  // ADR-0003) — checked/cleaned up on read rather than via a scheduled job.
+  // Distinct from `sold`, which is final.
+  reservedUntil: timestamp("reserved_until", { withTimezone: true }),
+  reservedByCartId: text("reserved_by_cart_id").references(() => carts.id, {
+    onDelete: "set null",
+  }),
 });
 
 export const artworkPhotos = pgTable("artwork_photos", {
@@ -127,3 +135,48 @@ export const verificationTokens = pgTable(
     }),
   ],
 );
+
+export const carts = pgTable("carts", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  // Null for a guest Cart — set when the Customer is signed in.
+  customerId: text("customer_id").references(() => users.id, {
+    onDelete: "cascade",
+  }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const cartItems = pgTable(
+  "cart_items",
+  {
+    id: serial("id").primaryKey(),
+    cartId: text("cart_id")
+      .notNull()
+      .references(() => carts.id, { onDelete: "cascade" }),
+    artworkId: integer("artwork_id")
+      .notNull()
+      .references(() => artworks.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (cartItem) => [unique().on(cartItem.cartId, cartItem.artworkId)],
+);
+
+export const cartsRelations = relations(carts, ({ many }) => ({
+  items: many(cartItems),
+}));
+
+export const cartItemsRelations = relations(cartItems, ({ one }) => ({
+  cart: one(carts, {
+    fields: [cartItems.cartId],
+    references: [carts.id],
+  }),
+  artwork: one(artworks, {
+    fields: [cartItems.artworkId],
+    references: [artworks.id],
+  }),
+}));

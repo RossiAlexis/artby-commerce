@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ArtworkOptions } from "@/components/galeria/artwork-options";
 import { ArtworkPhotos } from "@/components/galeria/artwork-photos";
 import { RelatedArtworks } from "@/components/galeria/related-artworks";
@@ -84,6 +85,7 @@ export default async function ArtworkDetailPage(props: {
             </dl>
             <p className="text-sm whitespace-pre-line">{artwork.description}</p>
             <ArtworkOptions />
+            <AddToCartButton artworkId={artwork.id} disabled={artwork.sold} />
           </div>
         </div>
         <RelatedArtworks artworks={relatedArtworks} />
