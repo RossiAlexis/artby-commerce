@@ -44,6 +44,7 @@ Zod is this project's chosen library for validating untrusted input (form submis
 
 ## React / Next.js patterns
 
+- Prefer a `shadcn` primitive over hand-rolled markup for anything interactive (selection, toggling, overlays, form controls) — reach for `components/ui/*` first, and add a missing primitive with `pnpm dlx shadcn@latest add <component>` rather than building the interaction (state, keyboard nav, aria attributes) from scratch. Plain Tailwind-styled `div`/`span`/`Link` markup is still fine for purely presentational, non-interactive layout (image grids, text blocks) that isn't a reusable primitive — see `components/homepage/featured-artworks.tsx` for the existing pattern this project follows for that case.
 - Components are Server Components by default (no `"use client"` unless the component actually needs interactivity/state).
 - Fetch data at the top of the route/page (`app/page.tsx`), in parallel with `Promise.all` when the fetches are independent, and pass already-shaped data down as props — presentational components (`components/homepage/*`) don't fetch internally.
 - Derive prop types from the data-access function rather than hand-declaring a parallel shape:
