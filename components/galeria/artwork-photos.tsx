@@ -3,12 +3,9 @@
 import Image from "next/image";
 import { useState, ViewTransition } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import type { ArtworkDetail } from "@/lib/db/artworks";
 
-type ArtworkPhoto = {
-  id: number;
-  url: string;
-  position: number;
-};
+type ArtworkPhoto = NonNullable<ArtworkDetail>["photos"][number];
 
 export function ArtworkPhotos({
   artworkId,

@@ -3,7 +3,7 @@ import { FeaturedArtworks } from "@/components/homepage/featured-artworks";
 import { HeroSection } from "@/components/homepage/hero-section";
 import { SiteFooter } from "@/components/homepage/site-footer";
 import { SiteHeader } from "@/components/homepage/site-header";
-import { DirectionalTransition } from "@/components/directional-transition";
+import { DirectionalTransition } from "@/components/layout/directional-transition";
 import { getFeaturedArtworks } from "@/lib/db/artworks";
 import { getSiteSettings } from "@/lib/db/site-settings";
 

@@ -4,7 +4,7 @@ import { ArtworkOptions } from "@/components/galeria/artwork-options";
 import { ArtworkPhotos } from "@/components/galeria/artwork-photos";
 import { RelatedArtworks } from "@/components/galeria/related-artworks";
 import { Badge } from "@/components/ui/badge";
-import { DirectionalTransition } from "@/components/directional-transition";
+import { DirectionalTransition } from "@/components/layout/directional-transition";
 import { getArtworkById, getArtworks } from "@/lib/db/artworks";
 import { formatPrice } from "@/lib/utils";
 
@@ -30,7 +30,11 @@ export default async function ArtworkDetailPage(props: {
 }) {
   const { id } = await props.params;
   const artworkId = Number(id);
-  if (!Number.isInteger(artworkId)) notFound();
+  // artworks.id is a Postgres `serial` (int4); anything outside its range
+  // would otherwise reach the DB and throw instead of yielding a 404.
+  const isValidId =
+    Number.isInteger(artworkId) && artworkId > 0 && artworkId <= 2147483647;
+  if (!isValidId) notFound();
 
   const [artwork, relatedResult] = await Promise.all([
     getArtworkById(artworkId),
