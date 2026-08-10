@@ -1,10 +1,10 @@
 "use server";
 import z from "zod";
-import { createCustomerAccount, getUserByEmail } from "@/lib/db/users";
+import { createCustomerAccount } from "@/lib/db/users";
 
 const signUpCustomerSchema = z.object({
   name: z.string().trim().min(1).optional(),
-  email: z.email().trim(),
+  email: z.string().trim().toLowerCase().pipe(z.email()),
   password: z.string().min(8),
 });
 
@@ -20,14 +20,13 @@ export async function signUpCustomer(
   }
   const { name, email, password } = parsed.data;
 
-  const existing = await getUserByEmail(email);
-  if (existing) {
+  const user = await createCustomerAccount({ email, password, name });
+  if (!user) {
     return {
       success: false,
       error: "An account with that email already exists.",
     };
   }
 
-  await createCustomerAccount({ email, password, name });
   return { success: true };
 }

@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { describe, expect, it } from "vitest";
-import { verifyCredentials } from "./credentials";
+import { verifyCredentials } from "@/lib/auth/credentials";
 import { db } from "@/lib/db/client";
 import { users } from "@/lib/db/schema";
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { signUpCustomer } from "./auth";
+import { signUpCustomer } from "@/app/actions/auth";
 import { getUserByEmail } from "@/lib/db/users";
 
 function uniqueEmail() {
