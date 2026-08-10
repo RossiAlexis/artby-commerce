@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getArtworks, getFeaturedArtworks } from "./artworks";
+import { getArtworkById, getArtworks, getFeaturedArtworks } from "./artworks";
 import { db } from "./client";
 import { artworkPhotos, artworks } from "./schema";
 
@@ -183,5 +183,48 @@ describe("getArtworks", () => {
     const secondPage = await getArtworks("all", { page: 2, pageSize: 5 });
     const secondPageIds = secondPage.artworks.map((artwork) => artwork.id);
     expect(secondPageIds.some((id) => insertedIds.includes(id))).toBe(false);
+  });
+});
+
+describe("getArtworkById", () => {
+  it("returns the visible artwork with all its photos ordered by position", async () => {
+    const artwork = await insertArtwork({ title: "Detail target" });
+    await db.insert(artworkPhotos).values([
+      {
+        artworkId: artwork.id,
+        url: "https://example.com/second.jpg",
+        position: 1,
+      },
+      {
+        artworkId: artwork.id,
+        url: "https://example.com/hero.jpg",
+        position: 0,
+      },
+    ]);
+
+    const result = await getArtworkById(artwork.id);
+
+    expect(result?.id).toBe(artwork.id);
+    expect(result?.photos.map((photo) => photo.url)).toEqual([
+      "https://example.com/hero.jpg",
+      "https://example.com/second.jpg",
+    ]);
+  });
+
+  it("returns undefined for a hidden artwork", async () => {
+    const hidden = await insertArtwork({
+      title: "Hidden detail",
+      visible: false,
+    });
+
+    const result = await getArtworkById(hidden.id);
+
+    expect(result).toBeUndefined();
+  });
+
+  it("returns undefined for a nonexistent id", async () => {
+    const result = await getArtworkById(999_999_999);
+
+    expect(result).toBeUndefined();
   });
 });

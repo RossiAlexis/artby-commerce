@@ -1,5 +1,5 @@
 "use server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { db } from "./client";
 import { artworkPhotos, artworks } from "./schema";
 import { resolveArtworksFilter } from "./artworks-filter";
@@ -56,3 +56,16 @@ export async function getArtworks(
 export type ArtworkListItem = Awaited<
   ReturnType<typeof getArtworks>
 >["artworks"][number];
+
+export async function getArtworkById(id: number) {
+  return db.query.artworks.findFirst({
+    where: and(eq(artworks.id, id), eq(artworks.visible, true)),
+    with: {
+      photos: {
+        orderBy: asc(artworkPhotos.position),
+      },
+    },
+  });
+}
+
+export type ArtworkDetail = Awaited<ReturnType<typeof getArtworkById>>;
