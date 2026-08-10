@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 type ArtworkPhoto = {
   id: number;
@@ -17,9 +17,9 @@ export function ArtworkPhotos({
   photos: ArtworkPhoto[];
   title: string;
 }) {
-  const [selectedId, setSelectedId] = useState(photos[0]?.id);
+  const [selectedId, setSelectedId] = useState(String(photos[0]?.id));
   const heroPhoto =
-    photos.find((photo) => photo.id === selectedId) ?? photos[0];
+    photos.find((photo) => String(photo.id) === selectedId) ?? photos[0];
 
   return (
     <div>
@@ -36,30 +36,28 @@ export function ArtworkPhotos({
         )}
       </div>
       {photos.length > 1 && (
-        <div className="mt-4 grid grid-cols-4 gap-4">
+        <ToggleGroup
+          value={[selectedId]}
+          onValueChange={([value]) => value && setSelectedId(value)}
+          className="mt-4 grid w-full grid-cols-4 gap-4"
+        >
           {photos.map((photo) => (
-            <button
+            <ToggleGroupItem
               key={photo.id}
-              type="button"
-              onClick={() => setSelectedId(photo.id)}
-              aria-current={photo.id === heroPhoto?.id}
-              className={cn(
-                "bg-muted relative aspect-square overflow-hidden ring-1",
-                photo.id === heroPhoto?.id
-                  ? "ring-foreground"
-                  : "ring-foreground/10",
-              )}
+              value={String(photo.id)}
+              aria-label={`${title} — foto ${photo.position + 1}`}
+              className="bg-muted ring-foreground/10 data-pressed:ring-foreground relative aspect-square h-auto w-full min-w-0 overflow-hidden rounded-none p-0 ring-1"
             >
               <Image
                 src={photo.url}
-                alt={`${title} — foto ${photo.position + 1}`}
+                alt=""
                 fill
                 className="object-cover"
                 sizes="25vw"
               />
-            </button>
+            </ToggleGroupItem>
           ))}
-        </div>
+        </ToggleGroup>
       )}
     </div>
   );
