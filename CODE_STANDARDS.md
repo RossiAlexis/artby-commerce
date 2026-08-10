@@ -17,6 +17,7 @@ For domain terminology (what an "Artwork" is, why "Cart" and not "bag", etc.) se
 ```
 app/                    # Next.js App Router routes/pages (Server Components by default)
 components/<area>/      # Page/feature-scoped components (e.g. components/homepage/)
+components/layout/      # Cross-cutting layout components shared across routes (e.g. page-transition wrappers)
 components/ui/          # shadcn base primitives
 lib/db/                 # Drizzle schema, data-access functions, colocated tests
 lib/utils.ts            # Small cross-cutting helpers (e.g. cn())

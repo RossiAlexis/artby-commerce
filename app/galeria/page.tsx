@@ -1,5 +1,5 @@
 import { Gallery } from "@/app/galeria/gallery";
-import { DirectionalTransition } from "@/components/directional-transition";
+import { DirectionalTransition } from "@/components/layout/directional-transition";
 import { getArtworks } from "@/lib/db/artworks";
 import { resolveArtworksFilter } from "@/lib/db/artworks-filter";
 import Link from "next/link";
