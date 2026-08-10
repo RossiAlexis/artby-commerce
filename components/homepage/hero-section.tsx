@@ -25,7 +25,8 @@ export function HeroSection({ coverImageUrl, heroTagline }: HeroSectionProps) {
             {heroTagline}
           </p>
           <Link
-            href="/gallery"
+            href="/galeria"
+            transitionTypes={["nav-forward"]}
             className="text-primary hover:text-primary-hover underline underline-offset-4"
           >
             Ver galería
