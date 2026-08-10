@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-import { jwt, session } from "./callbacks";
+import { jwt, session } from "@/lib/auth/callbacks";
 
 function baseSession(): Session {
   return {
