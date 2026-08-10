@@ -3,6 +3,7 @@ import { FeaturedArtworks } from "@/components/homepage/featured-artworks";
 import { HeroSection } from "@/components/homepage/hero-section";
 import { SiteFooter } from "@/components/homepage/site-footer";
 import { SiteHeader } from "@/components/homepage/site-header";
+import { DirectionalTransition } from "@/components/directional-transition";
 import { getFeaturedArtworks } from "@/lib/db/artworks";
 import { getSiteSettings } from "@/lib/db/site-settings";
 
@@ -17,21 +18,23 @@ export default async function Home() {
   }
 
   return (
-    <main>
-      <SiteHeader />
-      <HeroSection
-        coverImageUrl={settings.coverImageUrl}
-        heroTagline={settings.heroTagline}
-      />
-      <div className="lg:px-30">
-        <FeaturedArtworks artworks={featuredArtworks} />
-        <AboutArtist
-          aboutImageUrl={settings.aboutImageUrl}
-          aboutTitle={settings.aboutTitle}
-          aboutDescription={settings.aboutDescription}
+    <DirectionalTransition>
+      <main>
+        <SiteHeader />
+        <HeroSection
+          coverImageUrl={settings.coverImageUrl}
+          heroTagline={settings.heroTagline}
         />
-      </div>
-      <SiteFooter />
-    </main>
+        <div className="lg:px-30">
+          <FeaturedArtworks artworks={featuredArtworks} />
+          <AboutArtist
+            aboutImageUrl={settings.aboutImageUrl}
+            aboutTitle={settings.aboutTitle}
+            aboutDescription={settings.aboutDescription}
+          />
+        </div>
+        <SiteFooter />
+      </main>
+    </DirectionalTransition>
   );
 }

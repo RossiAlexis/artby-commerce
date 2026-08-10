@@ -1,4 +1,5 @@
 import { Gallery } from "@/app/galeria/gallery";
+import { DirectionalTransition } from "@/components/directional-transition";
 import { getArtworks } from "@/lib/db/artworks";
 import { resolveArtworksFilter } from "@/lib/db/artworks-filter";
 import Link from "next/link";
@@ -30,20 +31,23 @@ export default async function GaleriaPage(props: {
   const { artworks, hasMore } = await getArtworks(filter);
 
   return (
-    <div className="px-6 py-12 md:px-10">
-      <Link
-        href="/"
-        className="font-heading mb-8 flex items-center gap-4 text-2xl"
-      >
-        <ArrowBack />
-        {"Galería"}
-      </Link>
-      <Gallery
-        key={filter}
-        filter={filter}
-        initialArtworks={artworks}
-        initialHasMore={hasMore}
-      />
-    </div>
+    <DirectionalTransition>
+      <div className="px-6 py-12 md:px-10">
+        <Link
+          href="/"
+          transitionTypes={["nav-back"]}
+          className="font-heading mb-8 flex items-center gap-4 text-2xl"
+        >
+          <ArrowBack />
+          {"Galería"}
+        </Link>
+        <Gallery
+          key={filter}
+          filter={filter}
+          initialArtworks={artworks}
+          initialHasMore={hasMore}
+        />
+      </div>
+    </DirectionalTransition>
   );
 }
