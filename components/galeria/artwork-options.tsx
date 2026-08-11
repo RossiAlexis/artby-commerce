@@ -15,18 +15,19 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export function ArtworkOptions() {
   return (
     <div className="flex flex-wrap items-center gap-6">
-      <Tabs defaultValue="es">
+      {/* <Tabs defaultValue="es">
         <TabsList>
           <TabsTrigger value="es">ES</TabsTrigger>
           <TabsTrigger value="en">EN</TabsTrigger>
         </TabsList>
-      </Tabs>
+      </Tabs> */}
       <Select defaultValue="usd">
         <SelectTrigger aria-label="Moneda">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="usd">USD</SelectItem>
+          <SelectItem value="USD">USD</SelectItem>
+          <SelectItem value="CAD">CAD</SelectItem>
         </SelectContent>
       </Select>
       <label className="flex items-center gap-2 text-sm">

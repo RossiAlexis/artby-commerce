@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getCurrentCart } from "@/app/actions/cart";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { ArtworkOptions } from "@/components/galeria/artwork-options";
 import { ArtworkPhotos } from "@/components/galeria/artwork-photos";
@@ -37,9 +38,10 @@ export default async function ArtworkDetailPage(props: {
     Number.isInteger(artworkId) && artworkId > 0 && artworkId <= 2147483647;
   if (!isValidId) notFound();
 
-  const [artwork, relatedResult] = await Promise.all([
+  const [artwork, relatedResult, cart] = await Promise.all([
     getArtworkById(artworkId),
     getArtworks("available", { pageSize: 5 }),
+    getCurrentCart(),
   ]);
 
   if (!artwork) notFound();
@@ -47,6 +49,8 @@ export default async function ArtworkDetailPage(props: {
   const relatedArtworks = relatedResult.artworks
     .filter((related) => related.id !== artwork.id)
     .slice(0, 4);
+
+  const isInCart = cart.items.some((item) => item.artworkId === artwork.id);
 
   return (
     <DirectionalTransition>
@@ -85,7 +89,11 @@ export default async function ArtworkDetailPage(props: {
             </dl>
             <p className="text-sm whitespace-pre-line">{artwork.description}</p>
             <ArtworkOptions />
-            <AddToCartButton artworkId={artwork.id} disabled={artwork.sold} />
+            <AddToCartButton
+              artworkId={artwork.id}
+              disabled={artwork.sold}
+              inCart={isInCart}
+            />
           </div>
         </div>
         <RelatedArtworks artworks={relatedArtworks} />
