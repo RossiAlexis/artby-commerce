@@ -35,7 +35,9 @@ export function CartDrawer({ cart }: { cart: Cart }) {
         aria-label={`Carrito${cart.items.length > 0 ? ` (${cart.items.length})` : ""}`}
       >
         <ShoppingBag className="size-4" aria-hidden />
-        {cart.items.length > 0 && <span>{cart.items.length}</span>}
+        <span className={cart.items.length === 0 ? "invisible" : undefined}>
+          {cart.items.length}
+        </span>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -47,47 +49,48 @@ export function CartDrawer({ cart }: { cart: Cart }) {
               Tu carrito está vacío.
             </p>
           )}
-          {cart.items.map((item) => {
-            const heroPhoto = item.artwork.photos[0];
-            const isRemoving =
-              isPending && pendingArtworkId === item.artwork.id;
-            return (
-              <div key={item.id} className="flex gap-3">
-                <div className="bg-muted relative aspect-square size-20 shrink-0 overflow-hidden">
-                  {heroPhoto && (
-                    <Image
-                      src={heroPhoto.url}
-                      alt={item.artwork.title}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                    />
-                  )}
-                </div>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">{item.artwork.title}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {item.artwork.medium} · {item.artwork.dimensions}
-                  </p>
-                  <p className="text-sm">
-                    {formatPrice(
-                      item.artwork.priceCents,
-                      item.artwork.currency,
+          {cart.items.length > 0 &&
+            cart.items.map((item) => {
+              const heroPhoto = item.artwork.photos[0];
+              const isRemoving =
+                isPending && pendingArtworkId === item.artwork.id;
+              return (
+                <div key={item.id} className="flex gap-3">
+                  <div className="bg-muted relative aspect-square size-20 shrink-0 overflow-hidden">
+                    {heroPhoto && (
+                      <Image
+                        src={heroPhoto.url}
+                        alt={item.artwork.title}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
                     )}
-                  </p>
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium">{item.artwork.title}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {item.artwork.medium} · {item.artwork.dimensions}
+                    </p>
+                    <p className="text-sm">
+                      {formatPrice(
+                        item.artwork.priceCents,
+                        item.artwork.currency,
+                      )}
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={`Quitar ${item.artwork.title} del carrito`}
+                    disabled={isRemoving}
+                    onClick={() => handleRemove(item.artwork.id)}
+                  >
+                    <X className="size-4" aria-hidden />
+                  </Button>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label={`Quitar ${item.artwork.title} del carrito`}
-                  disabled={isRemoving}
-                  onClick={() => handleRemove(item.artwork.id)}
-                >
-                  <X className="size-4" aria-hidden />
-                </Button>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
         {cart.items.length > 0 && (
           <SheetFooter>
