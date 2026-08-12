@@ -41,6 +41,7 @@ Transactional email goes through [Resend](https://resend.com), with templates bu
 1. In `.env.local`, set:
    - `RESEND_API_KEY` — from the Resend dashboard.
    - `EMAIL_FROM` — the from-address; must be on a domain verified with Resend, or `onboarding@resend.dev` for local testing.
+   - `ADMIN_EMAIL` — recipient for the new-Order notification email sent on checkout.
 2. `pnpm email:dev` — starts React Email's local preview server for templates under `lib/email/templates/`.
 3. `pnpm test` runs `lib/email/send.test.ts`, which sends a real email to Resend's sandbox address (`delivered@resend.dev`) to prove the wiring works end-to-end.
 

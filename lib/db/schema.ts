@@ -180,3 +180,44 @@ export const cartItemsRelations = relations(cartItems, ({ one }) => ({
     references: [artworks.id],
   }),
 }));
+
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email").notNull(),
+  totalCents: integer("total_cents").notNull(),
+  currency: text("currency").notNull().default("USD"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const orderItems = pgTable("order_items", {
+  id: serial("id").primaryKey(),
+  orderId: integer("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  // References, not cascades from, the Artwork — an Order is final and must
+  // keep its own record even if the Artwork is later edited or removed.
+  artworkId: integer("artwork_id")
+    .notNull()
+    .references(() => artworks.id),
+  // Snapshot of the Artwork's price at purchase time, independent of any
+  // later admin edit to artworks.priceCents.
+  priceCents: integer("price_cents").notNull(),
+});
+
+export const ordersRelations = relations(orders, ({ many }) => ({
+  items: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+  artwork: one(artworks, {
+    fields: [orderItems.artworkId],
+    references: [artworks.id],
+  }),
+}));
