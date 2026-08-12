@@ -18,8 +18,8 @@ export function AddToCartButton({
   const [error, setError] = useState<string | null>(null);
 
   function handleClick() {
-    setError(null);
     startTransition(async () => {
+      setError(null);
       const result = await addToCartAction(artworkId);
       if (!result.success) setError(result.error);
     });

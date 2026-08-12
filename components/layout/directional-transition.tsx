@@ -23,6 +23,7 @@ export function DirectionalTransition({
         "nav-back": "nav-back",
         default: "none",
       }}
+      update="none"
       default="none"
     >
       {children}

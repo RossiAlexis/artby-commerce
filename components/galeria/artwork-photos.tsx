@@ -22,7 +22,11 @@ export function ArtworkPhotos({
 
   return (
     <div>
-      <ViewTransition name={`artwork-photo-${artworkId}`} share="morph">
+      <ViewTransition
+        name={`artwork-photo-${artworkId}`}
+        share="morph"
+        enter="none"
+      >
         <div className="bg-muted relative aspect-square w-full overflow-hidden">
           {heroPhoto && (
             <Image
