@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingBag, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { useState, useTransition } from "react";
 import { removeFromCartAction } from "@/app/actions/cart";
@@ -34,7 +34,13 @@ export function CartDrawer({ cart }: { cart: Cart }) {
         className="flex items-center gap-1"
         aria-label={`Carrito${cart.items.length > 0 ? ` (${cart.items.length})` : ""}`}
       >
-        <ShoppingBag className="size-4" aria-hidden />
+        <Image
+          src="/icons/cart-outline.svg"
+          alt=""
+          width={26}
+          height={26}
+          aria-hidden
+        />
         <span className={cart.items.length === 0 ? "invisible" : undefined}>
           {cart.items.length}
         </span>

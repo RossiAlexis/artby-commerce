@@ -56,6 +56,8 @@ Zod is this project's chosen library for validating untrusted input (form submis
   ```
 - Styling is Tailwind utility classes directly in JSX; use the `cn()` helper (`lib/utils.ts`, `clsx` + `tailwind-merge`) when classes are conditional or need merging — no CSS modules, no styled-components.
 - Import via the `@/*` path alias (`@/lib/db/artworks`, `@/components/homepage/...`), not deep relative paths, outside of files already inside `lib/db/` or `test/setup/` importing their immediate siblings.
+- Arbitrary-value Tailwind classes (`text-[Npx]`, `h-[Npx]`, `leading-[Npx]`, etc.) are written in `rem`, not `px` — e.g. `text-[1.125rem]` not `text-[18px]` (1rem = 16px). Tailwind's own spacing/sizing scale (`px-14`, `gap-7`, `text-2xl`, ...) is already rem-based and exempt from this — only arbitrary bracket values need converting. `h-px` (hairline borders) is also exempt: it's a literal 1px utility, not a design measurement. Pixel values from a design tool (Figma, etc.) should be converted before being pasted into a class name.
+- Color values reused across two or more places belong in `app/globals.css` as a design token (`@theme inline` + `:root`), not repeated as inline arbitrary hex (`text-[#666]`). Before adding a new token, check whether an existing one (`--foreground`, `--muted-foreground`, `--border`, ...) is already close enough to reuse — see `--muted-ink` / `--muted-ink-light` / `--muted-ink-inverse` for an example of a small, distinct token set added because the values didn't match the existing shadcn defaults closely enough to safely reuse them site-wide. A color used exactly once is fine to leave as an inline arbitrary value.
 
 ## Testing
 
