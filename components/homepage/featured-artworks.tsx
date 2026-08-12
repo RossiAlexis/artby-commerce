@@ -13,13 +13,13 @@ export function FeaturedArtworks({
   return (
     <section className="px-6 py-16 md:px-10">
       <div className="mb-8 flex items-center justify-between">
-        <span className="text-muted-foreground text-sm tracking-wide uppercase">
+        <span className="text-muted-ink-light text-[1.125rem] font-medium tracking-wide uppercase">
           Obras disponibles
         </span>
         <Link
           href="/galeria"
           transitionTypes={["nav-forward"]}
-          className="text-muted-foreground hover:text-foreground text-sm"
+          className="text-muted-ink hover:text-foreground text-[0.875rem]"
         >
           Ver todas →
         </Link>

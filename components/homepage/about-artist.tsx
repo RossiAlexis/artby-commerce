@@ -26,8 +26,8 @@ export function AboutArtist({
           />
         </div>
         <div className="flex flex-col justify-center gap-4 p-8 md:col-span-2 md:pr-21 md:pl-16">
-          <h2 className="font-serif text-2xl">{aboutTitle}</h2>
-          <p className="text-muted-foreground text-sm whitespace-pre-line">
+          <h2 className="font-serif text-2xl font-semibold">{aboutTitle}</h2>
+          <p className="text-muted-foreground text-base whitespace-pre-line">
             {aboutDescription}
           </p>
         </div>

@@ -1,8 +1,10 @@
 import { AboutArtist } from "@/components/homepage/about-artist";
 import { FeaturedArtworks } from "@/components/homepage/featured-artworks";
 import { HeroSection } from "@/components/homepage/hero-section";
+import { InstagramSection } from "@/components/homepage/instagram-section";
 import { SiteFooter } from "@/components/homepage/site-footer";
 import { SiteHeader } from "@/components/homepage/site-header";
+import { VipListSection } from "@/components/homepage/vip-list-section";
 import { DirectionalTransition } from "@/components/layout/directional-transition";
 import { getFeaturedArtworks } from "@/lib/db/artworks";
 import { getSiteSettings } from "@/lib/db/site-settings";
@@ -33,6 +35,8 @@ export default async function Home() {
             aboutDescription={settings.aboutDescription}
           />
         </div>
+        <InstagramSection />
+        <VipListSection />
         <SiteFooter />
       </main>
     </DirectionalTransition>
