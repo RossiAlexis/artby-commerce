@@ -4,8 +4,13 @@ import { revalidatePath } from "next/cache";
 import { addToCart, createCart, getCart, removeFromCart } from "@/lib/db/cart";
 import { ArtworkUnavailableError } from "@/lib/db/cart-errors";
 
-const CART_COOKIE = "cart_id";
+export const CART_COOKIE = "cart_id";
 const CART_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
+
+export async function getCartId(): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  return cookieStore.get(CART_COOKIE)?.value;
+}
 
 async function getOrCreateCartId(): Promise<string> {
   const cookieStore = await cookies();
@@ -47,8 +52,7 @@ export async function addToCartAction(
 }
 
 export async function removeFromCartAction(artworkId: number): Promise<void> {
-  const cookieStore = await cookies();
-  const cartId = cookieStore.get(CART_COOKIE)?.value;
+  const cartId = await getCartId();
   if (!cartId) return;
 
   await removeFromCart(cartId, artworkId);
@@ -56,8 +60,7 @@ export async function removeFromCartAction(artworkId: number): Promise<void> {
 }
 
 export async function getCurrentCart() {
-  const cookieStore = await cookies();
-  const cartId = cookieStore.get(CART_COOKIE)?.value;
+  const cartId = await getCartId();
   if (!cartId) return { items: [], totalCents: 0 };
 
   return getCart(cartId);
