@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { addToCart, createCart, getCart, removeFromCart } from "@/lib/db/cart";
 import { ArtworkUnavailableError } from "@/lib/db/cart-errors";
 
-export const CART_COOKIE = "cart_id";
+const CART_COOKIE = "cart_id";
 const CART_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 export async function getCartId(): Promise<string | undefined> {
