@@ -60,3 +60,8 @@ jobs:
         env:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
+          # Dummy values: lib/email/client.ts reads these at import time, so
+          # the module-level check needs a non-empty value even though the
+          # tests that would actually call Resend are skipped in CI.
+          RESEND_API_KEY: "re_ci_placeholder"
+          EMAIL_FROM: "ci@example.com"
