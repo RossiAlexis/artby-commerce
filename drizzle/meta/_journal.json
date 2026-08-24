@@ -50,6 +50,13 @@
       "when": 1787600807473,
       "tag": "0006_careful_nightshade",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1787605924013,
+      "tag": "0007_sturdy_nick_fury",
+      "breakpoints": true
     }
   ]
 }

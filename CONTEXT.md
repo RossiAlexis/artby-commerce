@@ -40,7 +40,7 @@ An email address submitted through the homepage's "lista VIP" signup, for future
 _Avoid_: Lead, contact (contact is reserved for the Contact page's one-off message, which isn't stored at all)
 
 **Site Settings**:
-The singleton set of public-homepage content the admin curates, separate from individual Artwork listings: the cover image, a hero tagline, the Featured picks, an "about the artist" block (image + title + description), social media links, and contact info.
+The singleton set of public-homepage content the admin curates, separate from individual Artwork listings: the cover image, a hero tagline, an optional announcement-bar message, the Featured picks, an "about the artist" block (image + title + description), an optional post-purchase message shown on the order-confirmation page, social media links, and contact info.
 _Avoid_: Dashboard (reserve "Dashboard"/"Admin" for the private area as a whole, which also includes Artwork catalog management and the Order list — Site Settings is just the homepage-curation part of it)
 
 ## Example dialogue
