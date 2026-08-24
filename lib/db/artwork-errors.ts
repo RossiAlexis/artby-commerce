@@ -15,3 +15,10 @@ export class ArtworkPhotoMismatchError extends Error {
     this.name = "ArtworkPhotoMismatchError";
   }
 }
+
+export class ArtworkPhotoLimitError extends Error {
+  constructor(message = "An Artwork can have at most 5 photos.") {
+    super(message);
+    this.name = "ArtworkPhotoLimitError";
+  }
+}

@@ -10,7 +10,8 @@ async function insertArtwork(overrides: Partial<typeof artworks.$inferInsert>) {
     .values({
       title: "Untitled",
       description: "A painting.",
-      dimensions: "40x40cm",
+      width: 40,
+      height: 40,
       medium: "Acrylic on canvas",
       year: 2024,
       priceCents: 45_000,

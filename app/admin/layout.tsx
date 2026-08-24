@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/auth";
+import { AdminSidebarNav } from "@/components/admin/admin-sidebar-nav";
 import { requireAdminPage } from "@/lib/auth/require-admin";
 
 export default async function AdminLayout({
@@ -10,26 +11,32 @@ export default async function AdminLayout({
   await requireAdminPage("/admin/artworks");
 
   return (
-    <div className="bg-muted min-h-screen">
-      <header className="border-border bg-background flex items-center justify-between border-b px-6 py-4">
-        <Link href="/admin/artworks" className="font-heading text-lg">
-          Admin
+    <div className="flex min-h-screen bg-[#f5f2ef]">
+      <aside className="flex w-60 shrink-0 flex-col bg-[#1c1917] px-7 py-9">
+        <Link
+          href="/admin/artworks"
+          className="font-serif text-xl font-medium text-[#fdf9f4]"
+        >
+          Art by Vero Miller
         </Link>
+        <div className="mt-5 h-px bg-white/10" />
+        <AdminSidebarNav />
         <form
           action={async () => {
             "use server";
             await signOut({ redirectTo: "/" });
           }}
+          className="mt-auto"
         >
           <button
             type="submit"
-            className="text-muted-foreground text-xs hover:underline"
+            className="rounded-md px-3 py-2 text-xs text-[#fdf9f4]/50 hover:text-[#fdf9f4] hover:underline"
           >
-            Sign out
+            Cerrar sesión
           </button>
         </form>
-      </header>
-      <div className="px-6 py-8 md:px-10">{children}</div>
+      </aside>
+      <main className="min-w-0 flex-1">{children}</main>
     </div>
   );
 }
