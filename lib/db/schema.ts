@@ -70,9 +70,15 @@ export const siteSettings = pgTable("site_settings", {
   id: serial("id").primaryKey(),
   coverImageUrl: text("cover_image_url").notNull(),
   heroTagline: text("hero_tagline").notNull(),
+  // Shown in the site's top announcement bar. Nullable — the bar is hidden
+  // entirely when unset, unlike the other homepage copy fields.
+  announcementBar: text("announcement_bar"),
   aboutImageUrl: text("about_image_url").notNull(),
   aboutTitle: text("about_title").notNull(),
   aboutDescription: text("about_description").notNull(),
+  // Shown on the order-confirmation page after checkout. Nullable — no
+  // message is shown when unset.
+  postPurchaseMessage: text("post_purchase_message"),
   socialLinks: jsonb("social_links").$type<Record<string, string>>().notNull(),
   contactInfo: jsonb("contact_info").$type<Record<string, string>>().notNull(),
 });

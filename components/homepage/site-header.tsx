@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import { getSiteSettings } from "@/lib/db/site-settings";
 
 export async function SiteHeader() {
-  const cart = await getCurrentCart();
+  const [cart, settings] = await Promise.all([
+    getCurrentCart(),
+    getSiteSettings(),
+  ]);
 
   return (
     <header>
-      <div className="bg-foreground flex h-9 items-center justify-center text-center text-xs text-white">
-        Envío internacional incluido en todas las obras
-      </div>
-      <div className="bg-border h-px w-full" />
+      {settings?.announcementBar && (
+        <>
+          <div className="bg-foreground flex h-9 items-center justify-center text-center text-xs text-white">
+            {settings.announcementBar}
+          </div>
+          <div className="bg-border h-px w-full" />
+        </>
+      )}
       <div className="flex items-center gap-7 border-b border-[#d3d3d3] bg-white px-14 py-[1.125rem]">
         <Link
           href="/"

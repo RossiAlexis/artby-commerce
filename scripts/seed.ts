@@ -89,10 +89,13 @@ async function main() {
   await db.insert(siteSettings).values({
     coverImageUrl: "/seed/cover.png",
     heroTagline: "Pinturas acrílicas para el lugar que las estaba esperando.",
+    announcementBar: "Envío internacional incluido en todas las obras",
     aboutImageUrl: "/seed/about-artist-image.png",
     aboutTitle: "Vero Miller",
     aboutDescription:
       "El arte no fue una elección. Es la forma en que aprendí a habitar el mundo.\nPinto, escribo, fotografío, distintas formas de decir lo mismo.\nMe inspira lo cotidiano: lugares, instantes que otros quizás pasan de largo, pero en los que siempre hay un recorte de mis ojos que ve un poco más.\nLa pintura es el pedacito de eso que elegí compartir acá, y me honra que alguien se lo lleve a casa.",
+    postPurchaseMessage:
+      "Gracias por llevarte esta obra a casa. Espero que encuentre el lugar perfecto.",
     socialLinks: { instagram: "https://instagram.com/artbyveromiller" },
     contactInfo: { email: "hola@artbyveromiller.com" },
   });
