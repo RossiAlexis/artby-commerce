@@ -6,6 +6,7 @@ An e-commerce site for an independent painter to sell her original paintings dir
 
 **Artwork**:
 A single physical painting listed for sale. Always one-of-a-kind — quantity is always 1. Once purchased, it is marked sold and can no longer be bought again. Has two independent states set by the admin:
+
 - **Sold**: whether it has been purchased. Defaults to shown-as-sold (with a badge) rather than removed.
 - **Visibility**: whether it appears on the public site at all, regardless of sold status. The admin can hide or show any Artwork manually, sold or not.
 

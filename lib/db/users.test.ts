@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createCustomerAccount, getUserByEmail } from "./users";
+import {
+  createAdminAccount,
+  createCustomerAccount,
+  getUserByEmail,
+} from "./users";
 
 function uniqueEmail() {
   return `${crypto.randomUUID()}@example.com`;
@@ -18,6 +22,23 @@ describe("createCustomerAccount", () => {
     expect(user.email).toBe(email);
     expect(user.name).toBe("Ada Customer");
     expect(user.isAdmin).toBe(false);
+    expect(user.passwordHash).not.toBeNull();
+    expect(user.passwordHash).not.toBe("correct-horse-battery-staple");
+  });
+});
+
+describe("createAdminAccount", () => {
+  it("creates an admin user with a hashed password", async () => {
+    const email = uniqueEmail();
+
+    const user = await createAdminAccount({
+      email,
+      password: "correct-horse-battery-staple",
+      name: "Vero Admin",
+    });
+
+    expect(user.email).toBe(email);
+    expect(user.isAdmin).toBe(true);
     expect(user.passwordHash).not.toBeNull();
     expect(user.passwordHash).not.toBe("correct-horse-battery-staple");
   });

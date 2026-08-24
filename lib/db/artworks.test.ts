@@ -1,3 +1,4 @@
+import { count, eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { getArtworkById, getArtworks, getFeaturedArtworks } from "./artworks";
 import { db } from "./client";
@@ -167,22 +168,39 @@ describe("getArtworks", () => {
   });
 
   it("paginates results and reports whether more pages remain", async () => {
-    const inserted = [];
     for (let i = 0; i < 5; i++) {
-      inserted.push(await insertArtwork({ title: `Page test ${i}` }));
+      await insertArtwork({ title: `Page test ${i}` });
     }
-    // Newest ids sort first, so this test's own rows always land on the
-    // earliest pages regardless of what earlier tests already inserted.
-    const insertedIds = inserted.map((artwork) => artwork.id).reverse();
+
+    // Other test files insert rows into this same shared branch concurrently
+    // (see CODE_STANDARDS.md#testing) — a single call is immune to that (one
+    // atomic query), but comparing the *relative position* of two separate
+    // calls isn't (a row inserted elsewhere between them shifts every
+    // desc(id)-ordered row down by one, which duplicates or skips rows at a
+    // page boundary). So every assertion below only depends on its own
+    // single call, never on lining two calls up against each other. A plain
+    // count query (not getArtworks, whose pageSize caps out below any
+    // realistic shared-branch row count) gives the true total.
+    const [{ total }] = await db
+      .select({ total: count() })
+      .from(artworks)
+      .where(eq(artworks.visible, true));
 
     const firstPage = await getArtworks("all", { page: 1, pageSize: 5 });
-    const firstPageIds = firstPage.artworks.map((artwork) => artwork.id);
-    expect(firstPageIds.every((id) => insertedIds.includes(id))).toBe(true);
-    expect(firstPage.hasMore).toBe(true);
+    expect(firstPage.artworks).toHaveLength(5);
+    expect(firstPage.hasMore).toBe(total > 5);
 
-    const secondPage = await getArtworks("all", { page: 2, pageSize: 5 });
-    const secondPageIds = secondPage.artworks.map((artwork) => artwork.id);
-    expect(secondPageIds.some((id) => insertedIds.includes(id))).toBe(false);
+    // Comfortably beyond any page that could exist, even accounting for
+    // rows inserted elsewhere between the count above and this call — more
+    // concurrent inserts only push the true last page further away, so this
+    // stays valid no matter how much this shared branch grows meanwhile.
+    const farBeyondLastPage = Math.ceil(total / 5) + 1000;
+    const emptyPage = await getArtworks("all", {
+      page: farBeyondLastPage,
+      pageSize: 5,
+    });
+    expect(emptyPage.artworks).toEqual([]);
+    expect(emptyPage.hasMore).toBe(false);
   });
 });
 

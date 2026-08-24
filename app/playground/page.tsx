@@ -21,8 +21,8 @@ export default async function PlaygroundPage() {
         <p className="text-muted-foreground mt-2 max-w-2xl text-sm">
           Side-by-side comparison of the artwork card as it exists today
           (hand-styled) versus the same data rendered with shadcn&apos;s{" "}
-          <code>Card</code> component, so we can decide which look to keep
-          going forward.
+          <code>Card</code> component, so we can decide which look to keep going
+          forward.
         </p>
       </div>
 

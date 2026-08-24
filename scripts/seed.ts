@@ -1,8 +1,9 @@
 import { Pool, neonConfig } from "@neondatabase/serverless";
+import bcrypt from "bcryptjs";
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import ws from "ws";
-import { artworkPhotos, artworks, siteSettings } from "../lib/db/schema";
+import { artworkPhotos, artworks, siteSettings, users } from "../lib/db/schema";
 
 config({ path: ".env.local" });
 neonConfig.webSocketConstructor = ws;
@@ -13,7 +14,14 @@ if (!connectionString) {
 }
 
 const pool = new Pool({ connectionString });
-const db = drizzle(pool, { schema: { artworks, artworkPhotos, siteSettings } });
+const db = drizzle(pool, {
+  schema: { artworks, artworkPhotos, siteSettings, users },
+});
+
+// Local/dev-only admin login (see CONTEXT.md's single-admin model) for
+// signing into /admin — never used against a real deployment's database.
+const ADMIN_EMAIL = "admin@artbyveromiller.com";
+const ADMIN_PASSWORD = "changeme123";
 
 // Mock image URLs served from public/seed/ until Vercel Blob storage lands.
 const ARTWORKS = [
@@ -63,6 +71,17 @@ async function main() {
   await db.delete(artworks);
   await db.delete(siteSettings);
 
+  const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 10);
+  await db
+    .insert(users)
+    .values({
+      email: ADMIN_EMAIL,
+      name: "Vero Miller",
+      passwordHash,
+      isAdmin: true,
+    })
+    .onConflictDoNothing();
+
   await db.insert(siteSettings).values({
     coverImageUrl: "/seed/cover.png",
     heroTagline: "Pinturas acrílicas para el lugar que las estaba esperando.",
@@ -97,6 +116,7 @@ async function main() {
   }
 
   console.log(`Seeded site settings + ${ARTWORKS.length} featured artworks`);
+  console.log(`Admin test user: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
   await pool.end();
 }
 
