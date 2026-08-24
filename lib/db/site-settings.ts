@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { desc } from "drizzle-orm";
 import { db } from "./client";
 import { siteSettings } from "./schema";

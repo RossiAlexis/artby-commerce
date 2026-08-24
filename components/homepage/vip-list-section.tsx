@@ -6,10 +6,11 @@ export function VipListSection() {
           Coleccionistas
         </p>
         <h2 className="font-serif text-5xl leading-[2.75rem] font-semibold text-white">
-          Acceso anticipado <br />a obras nuevas 
+          Acceso anticipado <br />a obras nuevas
         </h2>
-        <p className="text-muted-ink-inverse text-[1rem] leading-[1.5rem] flex-wrap">
-          Sumate a la lista VIP y sé el primero en ver cada obra  <br/><span className="flex-nowrap">antes del lanzamiento. </span>
+        <p className="text-muted-ink-inverse flex-wrap text-[1rem] leading-[1.5rem]">
+          Sumate a la lista VIP y sé el primero en ver cada obra <br />
+          <span className="flex-nowrap">antes del lanzamiento. </span>
         </p>
         <form className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
           <input
