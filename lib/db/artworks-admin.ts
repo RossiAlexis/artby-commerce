@@ -2,7 +2,9 @@
 import { asc, desc, eq } from "drizzle-orm";
 import { db } from "./client";
 import { artworkPhotos, artworks, orderItems } from "./schema";
+import { MAX_ARTWORK_PHOTOS } from "./artwork-constants";
 import {
+  ArtworkPhotoLimitError,
   ArtworkPhotoMismatchError,
   ArtworkReferencedByOrderError,
 } from "./artwork-errors";
@@ -10,7 +12,10 @@ import {
 export type ArtworkFields = {
   title: string;
   description: string;
-  dimensions: string;
+  width: number;
+  height: number;
+  dimensionUnit: string;
+  weightKg: number | null;
   medium: string;
   year: number;
   priceCents: number;
@@ -22,14 +27,17 @@ export type ArtworkFlags = Partial<{
   featured: boolean;
 }>;
 
-/** All Artworks regardless of Sold/Visibility, newest first, for the admin catalog list. */
+/**
+ * All Artworks regardless of Sold/Visibility, newest first, for the admin
+ * catalog list — includes every photo (not just the hero) since the list's
+ * edit modal manages the full photo set inline, without a extra fetch.
+ */
 export async function getAdminArtworks() {
   return db.query.artworks.findMany({
     orderBy: desc(artworks.id),
     with: {
       photos: {
-        where: eq(artworkPhotos.position, 0),
-        limit: 1,
+        orderBy: asc(artworkPhotos.position),
       },
     },
   });
@@ -104,6 +112,45 @@ export async function deleteArtwork(id: number) {
   const [deleted] = await db
     .delete(artworks)
     .where(eq(artworks.id, id))
+    .returning();
+  return deleted;
+}
+
+/**
+ * Records a photo already uploaded to Vercel Blob against this Artwork,
+ * appending it after the current highest position. Rejects once the
+ * Artwork already has `MAX_ARTWORK_PHOTOS` photos — the blob itself must be
+ * deleted by the caller in that case, since the row insert never happens.
+ */
+export async function addArtworkPhoto(artworkId: number, url: string) {
+  return db.transaction(async (tx) => {
+    const existing = await tx
+      .select({ position: artworkPhotos.position })
+      .from(artworkPhotos)
+      .where(eq(artworkPhotos.artworkId, artworkId));
+
+    if (existing.length >= MAX_ARTWORK_PHOTOS) {
+      throw new ArtworkPhotoLimitError();
+    }
+
+    const nextPosition =
+      existing.length === 0
+        ? 0
+        : Math.max(...existing.map((photo) => photo.position)) + 1;
+
+    const [photo] = await tx
+      .insert(artworkPhotos)
+      .values({ artworkId, url, position: nextPosition })
+      .returning();
+    return photo;
+  });
+}
+
+/** Removes a single photo row — the caller is responsible for deleting the underlying blob. */
+export async function deleteArtworkPhoto(photoId: number) {
+  const [deleted] = await db
+    .delete(artworkPhotos)
+    .where(eq(artworkPhotos.id, photoId))
     .returning();
   return deleted;
 }

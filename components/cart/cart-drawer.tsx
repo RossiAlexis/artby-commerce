@@ -123,7 +123,8 @@ export function CartDrawer({ cart }: { cart: Cart }) {
                         {item.artwork.title}
                       </p>
                       <p className="text-muted-foreground text-xs">
-                        {item.artwork.medium} · {item.artwork.dimensions}
+                        {item.artwork.medium} · {item.artwork.width} ×{" "}
+                        {item.artwork.height} {item.artwork.dimensionUnit}
                       </p>
                       <p className="text-sm">
                         {formatPrice(

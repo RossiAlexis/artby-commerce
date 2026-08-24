@@ -36,6 +36,20 @@
       "when": 1786497293106,
       "tag": "0004_bouncy_karma",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1787600672852,
+      "tag": "0005_boring_rumiko_fujikawa",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787600807473,
+      "tag": "0006_careful_nightshade",
+      "breakpoints": true
     }
   ]
 }

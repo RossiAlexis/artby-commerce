@@ -7,23 +7,18 @@ import {
   setArtworkFlagsAction,
 } from "@/app/actions/admin-artworks";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export function DeleteArtworkButton({
   artworkId,
   artworkTitle,
+  trigger,
+  label = "Eliminar",
 }: {
   artworkId: number;
   artworkTitle: string;
+  trigger?: React.ReactElement;
+  label?: string;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -63,36 +58,65 @@ export function DeleteArtworkButton({
         }
       }}
     >
-      <DialogTrigger render={<Button variant="destructive" size="sm" />}>
-        Delete
+      <DialogTrigger render={trigger ?? <Button variant="destructive" size="sm" />}>
+        {label}
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete &ldquo;{artworkTitle}&rdquo;?</DialogTitle>
-          <DialogDescription>
-            This can&apos;t be undone. An Artwork referenced by an Order
-            can&apos;t be deleted — hiding it is offered instead.
-          </DialogDescription>
-        </DialogHeader>
-        {error && <p className="text-destructive text-xs">{error}</p>}
-        <DialogFooter>
-          <DialogClose render={<Button variant="outline" />}>
-            Cancel
+      <DialogContent
+        showCloseButton={false}
+        className="flex w-full max-w-[440px] flex-col items-start gap-3 rounded-[10px] bg-white px-8 pt-7 pb-6 sm:max-w-[440px]"
+      >
+        <p className="text-[18px] font-semibold text-[#1c1917]">
+          ¿Eliminar &ldquo;{artworkTitle}&rdquo;?
+        </p>
+        <div className="flex flex-col gap-3 text-[13px] text-[#4a4845]">
+          <p>
+            Esta acción no se puede deshacer. La obra y sus fotos se quitan
+            del sitio y del panel.
+          </p>
+          {blockedByOrder ? (
+            <p>
+              Esta obra está referenciada por un pedido y no puede
+              eliminarse — podés ocultarla en su lugar.
+            </p>
+          ) : (
+            <p>
+              Si la obra se vendió, usá &ldquo;Marcar como vendida&rdquo; —
+              queda visible como parte de tu trayectoria.
+            </p>
+          )}
+        </div>
+        {error && <p className="text-[13px] text-destructive">{error}</p>}
+        <div className="flex w-full items-center justify-end gap-3">
+          <DialogClose
+            render={
+              <button
+                type="button"
+                className="rounded-[6px] border border-[#e0ddd6] px-[18px] py-2.5 text-[14px] font-medium text-[#1c1917] hover:bg-[#f5f2ef]"
+              />
+            }
+          >
+            Cancelar
           </DialogClose>
           {blockedByOrder ? (
-            <Button onClick={handleHideInstead} disabled={isPending}>
-              Hide instead
-            </Button>
+            <button
+              type="button"
+              onClick={handleHideInstead}
+              disabled={isPending}
+              className="rounded-[6px] bg-primary px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-50"
+            >
+              Ocultar en su lugar
+            </button>
           ) : (
-            <Button
-              variant="destructive"
+            <button
+              type="button"
               onClick={handleDelete}
               disabled={isPending}
+              className="rounded-[6px] bg-primary px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-50"
             >
-              Delete
-            </Button>
+              Sí, eliminar
+            </button>
           )}
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

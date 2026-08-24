@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { ArtworkForm } from "@/components/admin/artwork-form";
-import { ArtworkPhotosPlaceholder } from "@/components/admin/artwork-photos-placeholder";
+import { ArtworkPhotos } from "@/components/admin/artwork-photos";
 import { ArtworkToggles } from "@/components/admin/artwork-toggles";
 import { DeleteArtworkButton } from "@/components/admin/delete-artwork-button";
 import { getAdminArtworkById } from "@/lib/db/artworks-admin";
@@ -20,7 +20,7 @@ export default async function EditArtworkPage(props: {
   if (!artwork) notFound();
 
   return (
-    <div>
+    <div className="px-6 py-8 md:px-10">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-heading text-xl">{artwork.title}</h1>
         <DeleteArtworkButton
@@ -37,7 +37,9 @@ export default async function EditArtworkPage(props: {
       <div className="mt-8">
         <ArtworkForm artwork={artwork} />
       </div>
-      <ArtworkPhotosPlaceholder photos={artwork.photos} />
+      <div className="mt-8">
+        <ArtworkPhotos artworkId={artwork.id} photos={artwork.photos} />
+      </div>
     </div>
   );
 }

@@ -10,6 +10,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { AdminArtworkDetail } from "@/lib/db/artworks-admin";
 
@@ -21,13 +28,20 @@ export function ArtworkForm({
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [dimensionUnit, setDimensionUnit] = useState<"cm" | "in">(
+    artwork?.dimensionUnit === "in" ? "in" : "cm",
+  );
 
   function handleSubmit(formData: FormData) {
     setError(null);
+    const weight = String(formData.get("weightKg") ?? "").trim();
     const input: ArtworkFormInput = {
       title: String(formData.get("title") ?? ""),
       description: String(formData.get("description") ?? ""),
-      dimensions: String(formData.get("dimensions") ?? ""),
+      width: Number(formData.get("width")),
+      height: Number(formData.get("height")),
+      dimensionUnit,
+      weightKg: weight === "" ? null : Number(weight),
       medium: String(formData.get("medium") ?? ""),
       year: Number(formData.get("year")),
       priceCents: Math.round(Number(formData.get("price")) * 100),
@@ -62,14 +76,58 @@ export function ArtworkForm({
           required
         />
       </div>
+      <div className="flex gap-4">
+        <div className="flex flex-1 flex-col gap-1.5">
+          <Label htmlFor="width">Width</Label>
+          <Input
+            id="width"
+            name="width"
+            type="number"
+            step="0.1"
+            min="0"
+            defaultValue={artwork?.width}
+            required
+          />
+        </div>
+        <div className="flex flex-1 flex-col gap-1.5">
+          <Label htmlFor="height">Height</Label>
+          <Input
+            id="height"
+            name="height"
+            type="number"
+            step="0.1"
+            min="0"
+            defaultValue={artwork?.height}
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="dimensionUnit">Unit</Label>
+          <Select
+            value={dimensionUnit}
+            onValueChange={(value) =>
+              value && setDimensionUnit(value === "in" ? "in" : "cm")
+            }
+          >
+            <SelectTrigger id="dimensionUnit" className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cm">cm</SelectItem>
+              <SelectItem value="in">in</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="dimensions">Dimensions</Label>
+        <Label htmlFor="weightKg">Weight (kg)</Label>
         <Input
-          id="dimensions"
-          name="dimensions"
-          placeholder="40x40 cm"
-          defaultValue={artwork?.dimensions}
-          required
+          id="weightKg"
+          name="weightKg"
+          type="number"
+          step="0.1"
+          min="0"
+          defaultValue={artwork?.weightKg ?? undefined}
         />
       </div>
       <div className="flex flex-col gap-1.5">

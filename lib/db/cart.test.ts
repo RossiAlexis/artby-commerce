@@ -13,7 +13,8 @@ async function insertArtwork(
     .values({
       title: "Untitled",
       description: "A painting.",
-      dimensions: "40x40cm",
+      width: 40,
+      height: 40,
       medium: "Acrylic on canvas",
       year: 2024,
       priceCents: 45_000,
@@ -139,13 +140,15 @@ describe("getCart", () => {
   it("returns held Artworks with hero photo, dimensions/medium and price, plus a running total", async () => {
     const first = await insertArtwork({
       title: "First",
-      dimensions: "30x30cm",
+      width: 30,
+      height: 30,
       medium: "Oil on canvas",
       priceCents: 10_000,
     });
     const second = await insertArtwork({
       title: "Second",
-      dimensions: "50x50cm",
+      width: 50,
+      height: 50,
       medium: "Watercolor",
       priceCents: 25_000,
     });

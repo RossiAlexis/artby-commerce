@@ -1,12 +1,16 @@
 import { asc, eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
+import { MAX_ARTWORK_PHOTOS } from "./artwork-constants";
 import {
+  ArtworkPhotoLimitError,
   ArtworkPhotoMismatchError,
   ArtworkReferencedByOrderError,
 } from "./artwork-errors";
 import {
+  addArtworkPhoto,
   createArtwork,
   deleteArtwork,
+  deleteArtworkPhoto,
   getAdminArtworkById,
   getAdminArtworks,
   reorderArtworkPhotos,
@@ -24,7 +28,8 @@ async function insertArtwork(
     .values({
       title: "Untitled",
       description: "A painting.",
-      dimensions: "40x40cm",
+      width: 40,
+      height: 40,
       medium: "Acrylic on canvas",
       year: 2024,
       priceCents: 45_000,
@@ -37,7 +42,10 @@ async function insertArtwork(
 const FIELDS = {
   title: "Amanecer",
   description: "A sunrise over the hills.",
-  dimensions: "50x60 cm",
+  width: 50,
+  height: 60,
+  dimensionUnit: "cm",
+  weightKg: null,
   medium: "Acrylic on canvas",
   year: 2025,
   priceCents: 60_000,
@@ -64,7 +72,8 @@ describe("updateArtwork", () => {
     });
 
     expect(updated.title).toBe("Renamed");
-    expect(updated.dimensions).toBe(FIELDS.dimensions);
+    expect(updated.width).toBe(FIELDS.width);
+    expect(updated.height).toBe(FIELDS.height);
   });
 });
 
@@ -145,6 +154,63 @@ describe("deleteArtwork", () => {
 
     const found = await getAdminArtworkById(artwork.id);
     expect(found).not.toBeUndefined();
+  });
+});
+
+describe("addArtworkPhoto / deleteArtworkPhoto", () => {
+  it("appends a photo after the current highest position", async () => {
+    const artwork = await insertArtwork();
+    await db
+      .insert(artworkPhotos)
+      .values({
+        artworkId: artwork.id,
+        url: "https://example.com/0.jpg",
+        position: 0,
+      });
+
+    const photo = await addArtworkPhoto(
+      artwork.id,
+      "https://example.com/1.jpg",
+    );
+
+    expect(photo.position).toBe(1);
+    expect(photo.url).toBe("https://example.com/1.jpg");
+  });
+
+  it("throws ArtworkPhotoLimitError once the Artwork already has the max photos", async () => {
+    const artwork = await insertArtwork();
+    await db.insert(artworkPhotos).values(
+      Array.from({ length: MAX_ARTWORK_PHOTOS }, (_, position) => ({
+        artworkId: artwork.id,
+        url: `https://example.com/${position}.jpg`,
+        position,
+      })),
+    );
+
+    await expect(
+      addArtworkPhoto(artwork.id, "https://example.com/overflow.jpg"),
+    ).rejects.toThrow(ArtworkPhotoLimitError);
+  });
+
+  it("removes a photo row", async () => {
+    const artwork = await insertArtwork();
+    const [photo] = await db
+      .insert(artworkPhotos)
+      .values({
+        artworkId: artwork.id,
+        url: "https://example.com/0.jpg",
+        position: 0,
+      })
+      .returning();
+
+    const deleted = await deleteArtworkPhoto(photo.id);
+
+    expect(deleted?.id).toBe(photo.id);
+    const remaining = await db
+      .select()
+      .from(artworkPhotos)
+      .where(eq(artworkPhotos.artworkId, artwork.id));
+    expect(remaining).toHaveLength(0);
   });
 });
 

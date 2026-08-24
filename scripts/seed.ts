@@ -29,7 +29,8 @@ const ARTWORKS = [
     title: "Primavera en la ciudad",
     description:
       "Flores de cerezo enmarcando la torre, un instante de calma urbana.",
-    dimensions: "40x40 cm",
+    width: 40,
+    height: 40,
     medium: "Acrílico sobre lienzo",
     year: 2024,
     priceCents: 45_000,
@@ -39,7 +40,8 @@ const ARTWORKS = [
     title: "Mirada blanca",
     description:
       "El detalle de la mirada de un caballo blanco, en tonos tierra.",
-    dimensions: "30x40 cm",
+    width: 30,
+    height: 40,
     medium: "Acrílico sobre lienzo",
     year: 2024,
     priceCents: 45_000,
@@ -49,7 +51,8 @@ const ARTWORKS = [
     title: "Sisters",
     description:
       "Dos caballos apoyando sus cabezas, un gesto de cariño silencioso.",
-    dimensions: "50x60 cm",
+    width: 50,
+    height: 60,
     medium: "Acrílico sobre lienzo",
     year: 2024,
     priceCents: 45_000,
@@ -58,7 +61,8 @@ const ARTWORKS = [
   {
     title: "Ojos verdes",
     description: "Retrato de un gato de mirada intensa sobre fondo oscuro.",
-    dimensions: "30x40 cm",
+    width: 30,
+    height: 40,
     medium: "Acrílico sobre lienzo",
     year: 2024,
     priceCents: 45_000,
@@ -99,7 +103,8 @@ async function main() {
       .values({
         title: data.title,
         description: data.description,
-        dimensions: data.dimensions,
+        width: data.width,
+        height: data.height,
         medium: data.medium,
         year: data.year,
         priceCents: data.priceCents,

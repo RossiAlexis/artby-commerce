@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  doublePrecision,
   integer,
   jsonb,
   pgTable,
@@ -24,7 +25,10 @@ export const artworks = pgTable("artworks", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  dimensions: text("dimensions").notNull(),
+  width: doublePrecision("width").notNull(),
+  height: doublePrecision("height").notNull(),
+  dimensionUnit: text("dimension_unit").notNull().default("cm"),
+  weightKg: doublePrecision("weight_kg"),
   medium: text("medium").notNull(),
   year: smallint("year").notNull(),
   priceCents: integer("price_cents").notNull(),

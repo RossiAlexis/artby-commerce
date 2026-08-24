@@ -81,7 +81,9 @@ export default async function ArtworkDetailPage(props: {
             </p>
             <dl className="text-muted-foreground grid grid-cols-2 gap-2 text-sm">
               <dt>Dimensiones</dt>
-              <dd>{artwork.dimensions}</dd>
+              <dd>
+                {artwork.width} × {artwork.height} {artwork.dimensionUnit}
+              </dd>
               <dt>Técnica</dt>
               <dd>{artwork.medium}</dd>
               <dt>Año</dt>
