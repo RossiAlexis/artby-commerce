@@ -5,7 +5,6 @@ import { InstagramSection } from "@/components/homepage/instagram-section";
 import { SiteFooter } from "@/components/homepage/site-footer";
 import { SiteHeader } from "@/components/homepage/site-header";
 import { VipListSection } from "@/components/homepage/vip-list-section";
-import { DirectionalTransition } from "@/components/layout/directional-transition";
 import { getFeaturedArtworks } from "@/lib/db/artworks";
 import { getSiteSettings } from "@/lib/db/site-settings";
 
@@ -20,25 +19,23 @@ export default async function Home() {
   }
 
   return (
-    <DirectionalTransition>
-      <main>
-        <SiteHeader />
-        <HeroSection
-          coverImageUrl={settings.coverImageUrl}
-          heroTagline={settings.heroTagline}
+    <main>
+      <SiteHeader />
+      <HeroSection
+        coverImageUrl={settings.coverImageUrl}
+        heroTagline={settings.heroTagline}
+      />
+      <div className="lg:px-30">
+        <FeaturedArtworks artworks={featuredArtworks} />
+        <AboutArtist
+          aboutImageUrl={settings.aboutImageUrl}
+          aboutTitle={settings.aboutTitle}
+          aboutDescription={settings.aboutDescription}
         />
-        <div className="lg:px-30">
-          <FeaturedArtworks artworks={featuredArtworks} />
-          <AboutArtist
-            aboutImageUrl={settings.aboutImageUrl}
-            aboutTitle={settings.aboutTitle}
-            aboutDescription={settings.aboutDescription}
-          />
-        </div>
-        <InstagramSection />
-        <VipListSection />
-        <SiteFooter />
-      </main>
-    </DirectionalTransition>
+      </div>
+      <InstagramSection />
+      <VipListSection />
+      <SiteFooter />
+    </main>
   );
 }

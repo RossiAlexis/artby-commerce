@@ -1,18 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useState, ViewTransition } from "react";
+import { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ArtworkDetail } from "@/lib/db/artworks";
 
 type ArtworkPhoto = NonNullable<ArtworkDetail>["photos"][number];
 
 export function ArtworkPhotos({
-  artworkId,
   photos,
   title,
 }: {
-  artworkId: number;
   photos: ArtworkPhoto[];
   title: string;
 }) {
@@ -22,24 +20,18 @@ export function ArtworkPhotos({
 
   return (
     <div>
-      <ViewTransition
-        name={`artwork-photo-${artworkId}`}
-        share="morph"
-        enter="none"
-      >
-        <div className="bg-muted relative aspect-square w-full overflow-hidden">
-          {heroPhoto && (
-            <Image
-              src={heroPhoto.url}
-              alt={title}
-              fill
-              priority
-              className="object-cover"
-              sizes="(min-width: 768px) 50vw, 100vw"
-            />
-          )}
-        </div>
-      </ViewTransition>
+      <div className="bg-muted relative aspect-square w-full overflow-hidden">
+        {heroPhoto && (
+          <Image
+            src={heroPhoto.url}
+            alt={title}
+            fill
+            priority
+            className="object-cover"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
+        )}
+      </div>
       {photos.length > 1 && (
         <ToggleGroup
           value={[selectedId]}
