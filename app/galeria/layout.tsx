@@ -7,9 +7,7 @@ export default function GaleriaLayout({
 }) {
   return (
     <div className="bg-muted flex-1">
-      <div style={{ viewTransitionName: "site-header" }}>
-        <SiteHeader />
-      </div>
+      <SiteHeader />
       <div className="lg:px-30">{children}</div>
     </div>
   );

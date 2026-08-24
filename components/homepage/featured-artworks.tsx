@@ -18,7 +18,6 @@ export function FeaturedArtworks({
         </span>
         <Link
           href="/galeria"
-          transitionTypes={["nav-forward"]}
           className="text-muted-ink hover:text-foreground text-[0.875rem]"
         >
           Ver todas →
@@ -31,8 +30,7 @@ export function FeaturedArtworks({
             <Link
               key={artwork.id}
               href={`/galeria/${artwork.id}`}
-              transitionTypes={["nav-forward"]}
-              className="bg-card block"
+                  className="bg-card block"
             >
               <div className="bg-muted relative aspect-square overflow-hidden">
                 {heroPhoto && (

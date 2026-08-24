@@ -23,7 +23,6 @@ export function HeroSection({ coverImageUrl, heroTagline }: HeroSectionProps) {
         </p>
         <Link
           href="/galeria"
-          transitionTypes={["nav-forward"]}
           className="text-primary hover:text-primary-hover text-lg font-medium"
         >
           Ver galería
