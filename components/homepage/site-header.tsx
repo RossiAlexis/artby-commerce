@@ -2,12 +2,12 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
-import { getSiteSettings } from "@/lib/db/site-settings";
 import { MobileNav } from "@/components/homepage/mobile-nav";
+import { getSiteSettings } from "@/lib/db/site-settings";
 
 const NAV_LINKS = [
   { href: "/galeria", label: "Galería" },
-  { href: "#", label: "Sobre Vero" },
+  { href: "/#sobre-vero", label: "Sobre Vero" },
   { href: "/contacto", label: "Contacto" },
 ];
 
@@ -35,7 +35,7 @@ export async function SiteHeader() {
           <div className="bg-border h-px w-full" />
         </>
       )}
-      <div className="flex items-center gap-7 border-b border-[#d3d3d3] bg-white px-14 py-[1.125rem]">
+      <div className="flex items-center justify-between gap-7 border-b border-[#d3d3d3] bg-white px-14 py-[1.125rem]">
         <Link
           href="/"
           className="text-foreground font-serif text-xl leading-[1.375rem] font-semibold md:text-2xl"
@@ -49,17 +49,12 @@ export async function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="flex items-center gap-4">
           <CartDrawer cart={cart} />
-          <span className="text-foreground text-[0.6875rem] whitespace-nowrap">
+          <span className="text-foreground hidden text-[0.6875rem] whitespace-nowrap md:inline">
             USD &nbsp;·&nbsp; ES · EN
           </span>
-        </div>
-        <div className="ml-auto flex items-center gap-3 md:hidden">
-          <span className="text-foreground text-[0.6875rem] whitespace-nowrap">
-            ES · EN
-          </span>
-          <MobileNav cart={cart} links={links} />
+          <MobileNav links={links} />
         </div>
       </div>
     </header>
