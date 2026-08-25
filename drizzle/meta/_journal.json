@@ -57,6 +57,13 @@
       "when": 1787605924013,
       "tag": "0007_sturdy_nick_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787629962369,
+      "tag": "0008_productive_newton_destine",
+      "breakpoints": true
     }
   ]
 }
