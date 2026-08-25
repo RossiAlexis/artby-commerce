@@ -231,3 +231,14 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
     references: [artworks.id],
   }),
 }));
+
+// An email address submitted through the homepage's "lista VIP" signup, for
+// future outreach about new Artworks. Just a stored email + timestamp — no
+// account, no relation to Customer (see CONTEXT.md's Subscriber entry).
+export const subscribers = pgTable("subscribers", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
