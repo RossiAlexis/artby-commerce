@@ -5,7 +5,13 @@ import { sendEmail } from "@/lib/email/send";
 import { OrderConfirmationEmail } from "@/lib/email/templates/order-confirmation";
 import { OrderNotificationEmail } from "@/lib/email/templates/order-notification";
 import { db } from "./client";
-import { artworkPhotos, artworks, cartItems, orderItems, orders } from "./schema";
+import {
+  artworkPhotos,
+  artworks,
+  cartItems,
+  orderItems,
+  orders,
+} from "./schema";
 import { EmptyCartError, ReservationExpiredError } from "./order-errors";
 
 export type CheckoutInput = {

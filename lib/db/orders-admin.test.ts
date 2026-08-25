@@ -22,7 +22,9 @@ async function insertArtwork(
   return artwork;
 }
 
-async function insertOrder(overrides: Partial<typeof orders.$inferInsert> = {}) {
+async function insertOrder(
+  overrides: Partial<typeof orders.$inferInsert> = {},
+) {
   const [order] = await db
     .insert(orders)
     .values({
@@ -84,9 +86,10 @@ describe("getAdminOrders", () => {
 
     const newerResult = list.find((order) => order.id === newer.id)!;
     expect(newerResult.items).toHaveLength(2);
-    expect(newerResult.items.map((item) => item.artwork.title).sort()).toEqual(
-      ["Second", "Third"],
-    );
+    expect(newerResult.items.map((item) => item.artwork.title).sort()).toEqual([
+      "Second",
+      "Third",
+    ]);
   });
 });
 

@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAdminOrderById } from "@/lib/db/orders-admin";
-import { formatPrice } from "@/lib/utils";
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("es-ES", {
-    dateStyle: "long",
-    timeStyle: "short",
-  }).format(date);
-}
+import { formatDate, formatPrice } from "@/lib/utils";
 
 export default async function AdminOrderDetailPage(props: {
   params: Promise<{ id: string }>;
@@ -28,7 +21,7 @@ export default async function AdminOrderDetailPage(props: {
     <div className="px-6 py-8 md:px-10">
       <Link
         href="/admin/orders"
-        className="mb-6 inline-block text-sm text-primary hover:underline"
+        className="text-primary mb-6 inline-block text-sm hover:underline"
       >
         ← Pedidos
       </Link>
@@ -42,7 +35,7 @@ export default async function AdminOrderDetailPage(props: {
         </p>
       </div>
       <p className="mt-1 text-sm text-[#7c756f]">
-        {formatDate(order.createdAt)}
+        {formatDate(order.createdAt, { dateStyle: "long", timeStyle: "short" })}
       </p>
 
       <div className="mt-8 rounded-lg bg-white p-6">

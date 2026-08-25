@@ -15,3 +15,10 @@ export function formatPrice(priceCents: number, currency: string) {
     maximumFractionDigits: 2,
   }).format(priceCents / 100);
 }
+
+// The site's copy is consistently Rioplatense/Argentine Spanish (voseo:
+// "Sumate", "Creá", "Ingresá") — es-AR keeps date formatting consistent
+// with that, rather than each caller picking its own locale.
+export function formatDate(date: Date, options: Intl.DateTimeFormatOptions) {
+  return new Intl.DateTimeFormat("es-AR", options).format(date);
+}

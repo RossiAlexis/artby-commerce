@@ -3,19 +3,11 @@ import Link from "next/link";
 import { signOut } from "@/auth";
 import { requireCustomerPage } from "@/lib/auth/require-customer";
 import { getOrdersByCustomer } from "@/lib/db/orders";
-import { formatPrice } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Mi cuenta — Art by Vero Miller",
 };
-
-function formatOrderDate(date: Date) {
-  return new Intl.DateTimeFormat("es-AR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
 
 export default async function CuentaPage() {
   const customerId = await requireCustomerPage("/cuenta");
@@ -40,7 +32,7 @@ export default async function CuentaPage() {
         >
           <button
             type="submit"
-            className="text-[0.8125rem] text-[#7c756f] hover:text-foreground hover:underline"
+            className="hover:text-foreground text-[0.8125rem] text-[#7c756f] hover:underline"
           >
             Cerrar sesión
           </button>
@@ -67,8 +59,12 @@ export default async function CuentaPage() {
                     Orden #{order.id}
                   </span>
                   <span className="text-[0.8125rem] text-[#7c756f]">
-                    {formatOrderDate(order.createdAt)} ·{" "}
-                    {order.items.length}{" "}
+                    {formatDate(order.createdAt, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}{" "}
+                    · {order.items.length}{" "}
                     {order.items.length === 1 ? "obra" : "obras"}
                   </span>
                 </div>
