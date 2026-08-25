@@ -3,19 +3,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { requireCustomerPage } from "@/lib/auth/require-customer";
 import { getOrderById } from "@/lib/db/orders";
-import { formatPrice } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Detalle del pedido — Art by Vero Miller",
 };
-
-function formatOrderDate(date: Date) {
-  return new Intl.DateTimeFormat("es-AR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
 
 export default async function OrderDetailPage(props: {
   params: Promise<{ id: string }>;
@@ -42,7 +34,11 @@ export default async function OrderDetailPage(props: {
           Orden #{order.id}
         </h1>
         <p className="text-[0.8125rem] text-[#7c756f]">
-          {formatOrderDate(order.createdAt)}
+          {formatDate(order.createdAt, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </p>
       </div>
 

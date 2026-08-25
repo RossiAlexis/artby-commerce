@@ -47,7 +47,9 @@ async function insertCustomer() {
   return user;
 }
 
-async function insertOrder(overrides: Partial<typeof orders.$inferInsert> = {}) {
+async function insertOrder(
+  overrides: Partial<typeof orders.$inferInsert> = {},
+) {
   const [order] = await db
     .insert(orders)
     .values({

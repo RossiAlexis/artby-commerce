@@ -8,14 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAdminOrders } from "@/lib/db/orders-admin";
-import { formatPrice } from "@/lib/utils";
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("es-ES", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(date);
-}
+import { formatDate, formatPrice } from "@/lib/utils";
 
 export default async function AdminOrdersPage() {
   const orders = await getAdminOrders();
@@ -54,12 +47,19 @@ export default async function AdminOrdersPage() {
                         </div>
                       </TableCell>
                       <TableCell className="max-w-[240px] whitespace-normal">
-                        {order.items.map((item) => item.artwork.title).join(", ")}
+                        {order.items
+                          .map((item) => item.artwork.title)
+                          .join(", ")}
                       </TableCell>
                       <TableCell>
                         {formatPrice(order.totalCents, order.currency)}
                       </TableCell>
-                      <TableCell>{formatDate(order.createdAt)}</TableCell>
+                      <TableCell>
+                        {formatDate(order.createdAt, {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </TableCell>
                       <TableCell>
                         <Link
                           href={`/admin/orders/${order.id}`}
@@ -97,7 +97,10 @@ export default async function AdminOrdersPage() {
                     {order.items.map((item) => item.artwork.title).join(", ")}
                   </p>
                   <p className="text-[13px] text-[#7c756f]">
-                    {formatDate(order.createdAt)}
+                    {formatDate(order.createdAt, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
                   </p>
                 </Link>
               ))}
