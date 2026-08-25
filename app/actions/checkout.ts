@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import z from "zod";
+import { auth } from "@/auth";
 import { getCartId } from "@/app/actions/cart";
 import { EmptyCartError, ReservationExpiredError } from "@/lib/db/order-errors";
 import { checkoutCart } from "@/lib/db/orders";
@@ -21,7 +22,7 @@ export async function checkoutAction(
     return { success: false, error: "Ingresa un nombre y correo válidos." };
   }
 
-  const cartId = await getCartId();
+  const [cartId, session] = await Promise.all([getCartId(), auth()]);
   if (!cartId) {
     return { success: false, error: "Tu carrito está vacío." };
   }
@@ -31,6 +32,9 @@ export async function checkoutAction(
       cartId,
       customerName: parsed.data.name,
       customerEmail: parsed.data.email,
+      // Associates the Order with the Customer's account when they're
+      // signed in at checkout — left unset for guest checkouts.
+      customerId: session?.user?.id,
     });
     revalidatePath("/galeria", "layout");
     return { success: true, orderId: order.id };

@@ -16,5 +16,12 @@ export const jwt: JwtCallback = async ({ token, user }) => {
 
 export const session: SessionCallback = async ({ session, token }) => {
   session.user.isAdmin = Boolean(token.isAdmin);
+  // `token.sub` is the signed-in user's id (set by Auth.js from the
+  // Adapter/Credentials user before this callback runs) — exposed on the
+  // session so Server Components/Actions can scope Orders to this Customer
+  // without an extra DB round-trip.
+  if (token.sub) {
+    session.user.id = token.sub;
+  }
   return session;
 };

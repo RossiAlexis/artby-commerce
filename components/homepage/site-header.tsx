@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { auth } from "@/auth";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { getSiteSettings } from "@/lib/db/site-settings";
@@ -11,10 +12,18 @@ const NAV_LINKS = [
 ];
 
 export async function SiteHeader() {
-  const [cart, settings] = await Promise.all([
+  const [cart, settings, session] = await Promise.all([
     getCurrentCart(),
     getSiteSettings(),
+    auth(),
   ]);
+
+  // "Mi cuenta" only makes sense once signed in — otherwise the link sends
+  // the Customer to sign in first (see lib/auth/require-customer.ts).
+  const accountLink = session?.user?.id
+    ? { href: "/cuenta", label: "Mi cuenta" }
+    : { href: "/cuenta/ingresar", label: "Ingresar" };
+  const links = [...NAV_LINKS, accountLink];
 
   return (
     <header>
@@ -34,7 +43,7 @@ export async function SiteHeader() {
           Art by Vero Miller
         </Link>
         <nav className="text-foreground hidden flex-1 items-center justify-end gap-7 text-[0.8125rem] md:flex">
-          {NAV_LINKS.map((link) => (
+          {links.map((link) => (
             <Link key={link.label} href={link.href} className="nav-link">
               {link.label}
             </Link>
@@ -50,7 +59,7 @@ export async function SiteHeader() {
           <span className="text-foreground text-[0.6875rem] whitespace-nowrap">
             ES · EN
           </span>
-          <MobileNav cart={cart} links={NAV_LINKS} />
+          <MobileNav cart={cart} links={links} />
         </div>
       </div>
     </header>

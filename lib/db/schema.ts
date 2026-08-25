@@ -195,6 +195,11 @@ export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
   customerName: text("customer_name").notNull(),
   customerEmail: text("customer_email").notNull(),
+  // Null for a guest Order — set when the Customer was signed in at
+  // checkout, so they can later see it in their own Order history.
+  customerId: text("customer_id").references(() => users.id, {
+    onDelete: "set null",
+  }),
   totalCents: integer("total_cents").notNull(),
   currency: text("currency").notNull().default("USD"),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -217,8 +222,12 @@ export const orderItems = pgTable("order_items", {
   priceCents: integer("price_cents").notNull(),
 });
 
-export const ordersRelations = relations(orders, ({ many }) => ({
+export const ordersRelations = relations(orders, ({ many, one }) => ({
   items: many(orderItems),
+  customer: one(users, {
+    fields: [orders.customerId],
+    references: [users.id],
+  }),
 }));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({

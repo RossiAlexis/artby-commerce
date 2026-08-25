@@ -1,17 +1,21 @@
 "use server";
-import { and, eq, gt, inArray } from "drizzle-orm";
+import { and, desc, eq, gt, inArray } from "drizzle-orm";
 import { requireEnv } from "@/lib/env";
 import { sendEmail } from "@/lib/email/send";
 import { OrderConfirmationEmail } from "@/lib/email/templates/order-confirmation";
 import { OrderNotificationEmail } from "@/lib/email/templates/order-notification";
 import { db } from "./client";
-import { artworks, cartItems, orderItems, orders } from "./schema";
+import { artworkPhotos, artworks, cartItems, orderItems, orders } from "./schema";
 import { EmptyCartError, ReservationExpiredError } from "./order-errors";
 
 export type CheckoutInput = {
   cartId: string;
   customerName: string;
   customerEmail: string;
+  // Set when the Customer was signed in at checkout time — associates the
+  // resulting Order with their account (see CONTEXT.md: Orders are optional
+  // to associate, never required, since checkout also supports guests).
+  customerId?: string;
 };
 
 /**
@@ -25,6 +29,7 @@ export async function checkoutCart({
   cartId,
   customerName,
   customerEmail,
+  customerId,
 }: CheckoutInput) {
   const now = new Date();
 
@@ -72,6 +77,7 @@ export async function checkoutCart({
       .values({
         customerName,
         customerEmail,
+        customerId,
         totalCents,
         currency: sold[0].currency,
       })
@@ -107,3 +113,54 @@ export async function checkoutCart({
 }
 
 export type CompletedOrder = Awaited<ReturnType<typeof checkoutCart>>;
+
+const orderWithItems = {
+  items: {
+    with: {
+      artwork: {
+        with: {
+          photos: {
+            where: eq(artworkPhotos.position, 0),
+            limit: 1,
+          },
+        },
+      },
+    },
+  },
+} as const;
+
+/** A signed-in Customer's own past Orders, newest first — see CONTEXT.md. */
+export async function getOrdersByCustomer(customerId: string) {
+  return db.query.orders.findMany({
+    where: eq(orders.customerId, customerId),
+    orderBy: desc(orders.createdAt),
+    with: orderWithItems,
+  });
+}
+
+export type CustomerOrder = Awaited<
+  ReturnType<typeof getOrdersByCustomer>
+>[number];
+
+/**
+ * A single Order's detail — but only for the Customer it belongs to. This is
+ * the access-control enforcement point (see issue #10): an Order placed as a
+ * guest, or by a different Customer, resolves to `null` here exactly like a
+ * not-found Order, rather than leaking whether the id exists at all.
+ */
+export async function getOrderById(id: number, customerId: string) {
+  const order = await db.query.orders.findFirst({
+    where: eq(orders.id, id),
+    with: orderWithItems,
+  });
+
+  if (!order || order.customerId !== customerId) {
+    return null;
+  }
+
+  return order;
+}
+
+export type CustomerOrderDetail = NonNullable<
+  Awaited<ReturnType<typeof getOrderById>>
+>;
