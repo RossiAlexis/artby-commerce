@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { CartDrawerProvider } from "@/components/cart/cart-drawer-context";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -27,7 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} ${cormorantGaramond.variable} h-full antialiased`}
     >
-      <body className="bg-background flex min-h-full flex-col">{children}</body>
+      <body className="bg-background flex min-h-full flex-col">
+        <CartDrawerProvider>{children}</CartDrawerProvider>
+      </body>
     </html>
   );
 }

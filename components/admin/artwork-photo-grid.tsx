@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload, X } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import {
@@ -8,8 +8,8 @@ import {
   reorderArtworkPhotosAction,
   uploadArtworkPhotoAction,
 } from "@/app/actions/admin-artworks";
+import { PhotoTile } from "@/components/admin/artwork-photo-tile";
 import { MAX_ARTWORK_PHOTOS as MAX_PHOTOS } from "@/lib/db/artwork-constants";
-import { cn } from "@/lib/utils";
 
 type Photo = { id: number; url: string; position: number };
 
@@ -98,8 +98,8 @@ export function ArtworkPhotoGrid({
         Imagen de la obra
       </p>
       <p className="mt-1 text-[11px] text-[#7c756f]">
-        JPG o PNG. Mínimo 600 × 600 px. La primera foto es la portada —
-        arrastrá para reordenar.
+        JPG o PNG. Mínimo 600 × 600 px. La primera foto es la portada — arrastrá
+        para reordenar.
       </p>
       <div className="mt-3 flex flex-wrap gap-2.5">
         {cover && (
@@ -148,52 +148,7 @@ export function ArtworkPhotoGrid({
         className="hidden"
         onChange={handleFileChange}
       />
-      {error && <p className="mt-2 text-[11px] text-destructive">{error}</p>}
-    </div>
-  );
-}
-
-function PhotoTile({
-  photo,
-  size,
-  isCover = false,
-  onDragStart,
-  onDrop,
-  onDelete,
-}: {
-  photo: Photo;
-  size: number;
-  isCover?: boolean;
-  onDragStart: () => void;
-  onDrop: () => void;
-  onDelete: () => void;
-}) {
-  return (
-    <div
-      draggable
-      onDragStart={onDragStart}
-      onDragOver={(event) => event.preventDefault()}
-      onDrop={onDrop}
-      className="group relative shrink-0 cursor-grab overflow-hidden rounded-[6px] bg-[#f5f2ef]"
-      style={{ width: size, height: size }}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element -- admin-only preview of an already-uploaded Blob URL, not worth next/image's optimization pipeline */}
-      <img src={photo.url} alt="" className="size-full object-cover" />
-      {isCover && (
-        <span className="absolute bottom-2 left-2 rounded-[4px] bg-[#1c1917] px-2 py-[3px] text-[9px] font-medium tracking-[0.5px] text-white">
-          PORTADA
-        </span>
-      )}
-      <button
-        type="button"
-        onClick={onDelete}
-        aria-label="Quitar foto"
-        className={cn(
-          "absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100",
-        )}
-      >
-        <X className="size-3" />
-      </button>
+      {error && <p className="text-destructive mt-2 text-[11px]">{error}</p>}
     </div>
   );
 }

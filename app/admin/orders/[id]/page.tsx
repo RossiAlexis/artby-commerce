@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { OrderDetailSections } from "@/components/admin/order-detail-content";
 import { getAdminOrderById } from "@/lib/db/orders-admin";
 import { formatDate, formatPrice } from "@/lib/utils";
 
@@ -38,29 +39,8 @@ export default async function AdminOrderDetailPage(props: {
         {formatDate(order.createdAt, { dateStyle: "long", timeStyle: "short" })}
       </p>
 
-      <div className="mt-8 rounded-lg bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#1c1917]">Cliente</h2>
-        <p className="mt-2 text-sm text-[#1c1917]">{order.customerName}</p>
-        <p className="text-sm text-[#7c756f]">{order.customerEmail}</p>
-      </div>
-
-      <div className="mt-6 rounded-lg bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#1c1917]">
-          Obra(s) incluidas
-        </h2>
-        <ul className="mt-4 divide-y divide-[#e2d8ce]">
-          {order.items.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-center justify-between gap-4 py-3 text-sm first:pt-0 last:pb-0"
-            >
-              <span className="text-[#1c1917]">{item.artwork.title}</span>
-              <span className="text-[#7c756f]">
-                {formatPrice(item.priceCents, order.currency)}
-              </span>
-            </li>
-          ))}
-        </ul>
+      <div className="mt-8 flex flex-col gap-6">
+        <OrderDetailSections order={order} />
       </div>
     </div>
   );

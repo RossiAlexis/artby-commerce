@@ -44,12 +44,12 @@ export function SiteSettingsImageUpload({
   }
 
   return (
-    <div className="flex items-start gap-4">
+    <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
       {/* eslint-disable-next-line @next/next/no-img-element -- admin-only preview of an already-uploaded Blob URL, not worth next/image's optimization pipeline */}
       <img
         src={imageUrl}
         alt=""
-        className="h-[104px] w-[186px] shrink-0 border border-[#e2d8ce] object-cover"
+        className="h-[186px] w-full shrink-0 border border-[#e2d8ce] object-cover sm:h-[104px] sm:w-[186px]"
       />
       <div className="flex flex-col items-start gap-2">
         <Button

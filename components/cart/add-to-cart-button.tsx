@@ -35,8 +35,13 @@ export function AddToCartButton({
   }
 
   return (
-    <div className="space-y-2">
-      <Button onClick={handleClick} disabled={disabled || isPending}>
+    <div className="w-full space-y-2">
+      <Button
+        variant="secondary"
+        onClick={handleClick}
+        disabled={disabled || isPending}
+        className="h-[42px] w-full"
+      >
         {isPending ? "Añadiendo…" : "Añadir al carrito"}
       </Button>
       {error && <p className="text-destructive text-xs">{error}</p>}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+export const ADMIN_NAV_ITEMS = [
   { href: "/admin/artworks", label: "Obras" },
   { href: "/admin/site-settings", label: "Mi sitio" },
   { href: "/admin/orders", label: "Pedidos" },
@@ -16,7 +16,7 @@ export function AdminSidebarNav() {
 
   return (
     <nav className="mt-5 flex flex-col gap-1">
-      {NAV_ITEMS.map((item) => {
+      {ADMIN_NAV_ITEMS.map((item) => {
         if (!item.href) {
           return (
             <span

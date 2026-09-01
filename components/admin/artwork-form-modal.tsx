@@ -3,9 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import {
+  createArtworkAction,
   setArtworkFlagsAction,
   updateArtworkAction,
+  uploadArtworkPhotoAction,
 } from "@/app/actions/admin-artworks";
+import {
+  ArtworkPhotoPicker,
+  type PendingPhoto,
+} from "@/components/admin/artwork-photo-picker";
 import { ArtworkPhotoGrid } from "@/components/admin/artwork-photo-grid";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
@@ -23,22 +29,31 @@ import type { AdminArtworkListItem } from "@/lib/db/artworks-admin";
 const fieldClass =
   "h-10 rounded-[4px] border border-[#e2d8ce] px-3 text-[14px] text-[#1c1917] outline-none focus:border-primary";
 
-export function ArtworkEditModal({
-  artwork,
-  open,
-  onOpenChange,
-}: {
-  artwork: AdminArtworkListItem;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
+type Props =
+  | {
+      mode: "edit";
+      artwork: AdminArtworkListItem;
+      open: boolean;
+      onOpenChange: (open: boolean) => void;
+    }
+  | {
+      mode: "create";
+      artwork?: undefined;
+      open: boolean;
+      onOpenChange: (open: boolean) => void;
+    };
+
+export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [dimensionUnit, setDimensionUnit] = useState<"cm" | "in">(
-    artwork.dimensionUnit === "in" ? "in" : "cm",
+    artwork?.dimensionUnit === "in" ? "in" : "cm",
   );
-  const [sold, setSold] = useState(artwork.sold);
+  const [sold, setSold] = useState(artwork?.sold ?? false);
+  const [visible, setVisible] = useState(artwork?.visible ?? true);
+  const [featured, setFeatured] = useState(artwork?.featured ?? false);
+  const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([]);
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -56,16 +71,59 @@ export function ArtworkEditModal({
     };
 
     startTransition(async () => {
-      const result = await updateArtworkAction(artwork.id, input);
+      if (mode === "edit") {
+        const result = await updateArtworkAction(artwork.id, input);
+        if (!result.success) {
+          setError(result.error);
+          return;
+        }
+        if (
+          sold !== artwork.sold ||
+          visible !== artwork.visible ||
+          featured !== artwork.featured
+        ) {
+          await setArtworkFlagsAction(artwork.id, { sold, visible, featured });
+        }
+        onOpenChange(false);
+        router.refresh();
+        return;
+      }
+
+      const result = await createArtworkAction(input);
       if (!result.success) {
         setError(result.error);
         return;
       }
-      if (sold !== artwork.sold) {
-        await setArtworkFlagsAction(artwork.id, { sold });
+
+      if (sold || !visible || featured) {
+        await setArtworkFlagsAction(result.id, { sold, visible, featured });
+      }
+
+      let photoError: string | null = null;
+      for (const photo of pendingPhotos) {
+        const photoFormData = new FormData();
+        photoFormData.set("file", photo.file);
+        const uploadResult = await uploadArtworkPhotoAction(
+          result.id,
+          photoFormData,
+        );
+        if (!uploadResult.success) {
+          photoError = `La obra se creó, pero una foto no se pudo subir: ${uploadResult.error}`;
+          break;
+        }
+      }
+
+      pendingPhotos.forEach((photo) => URL.revokeObjectURL(photo.url));
+      router.refresh();
+
+      // The Artwork is already saved either way — but if a photo failed to
+      // upload, keep the modal open so the error above is actually seen
+      // instead of closing over it.
+      if (photoError) {
+        setError(photoError);
+        return;
       }
       onOpenChange(false);
-      router.refresh();
     });
   }
 
@@ -73,11 +131,11 @@ export function ArtworkEditModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="flex max-h-[85vh] w-full max-w-[680px] flex-col gap-0 overflow-hidden rounded-[8px] p-0 sm:max-w-[680px]"
+        className="fixed inset-0 z-50 flex h-full max-h-full w-full max-w-full translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden rounded-none p-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:h-auto sm:max-h-[85vh] sm:w-full sm:max-w-[680px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[8px]"
       >
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-[#e2d8ce] px-8">
           <h2 className="text-[18px] font-semibold text-[#1c1917]">
-            Editar obra
+            {mode === "create" ? "Agregar nueva obra" : "Editar obra"}
           </h2>
           <DialogClose
             render={
@@ -97,22 +155,32 @@ export function ArtworkEditModal({
           className="flex flex-1 flex-col overflow-hidden"
         >
           <div className="flex-1 overflow-y-auto px-8 py-6">
-            <ArtworkPhotoGrid
-              artworkId={artwork.id}
-              photos={artwork.photos}
-            />
+            {mode === "edit" ? (
+              <ArtworkPhotoGrid
+                artworkId={artwork.id}
+                photos={artwork.photos}
+              />
+            ) : (
+              <ArtworkPhotoPicker
+                photos={pendingPhotos}
+                onChange={setPendingPhotos}
+              />
+            )}
 
             <div className="mt-6 flex flex-col gap-1.5">
               <label
-                htmlFor="edit-title"
+                htmlFor="form-title"
                 className="text-[13px] font-medium text-[#1c1917]"
               >
                 Título
               </label>
               <input
-                id="edit-title"
+                id="form-title"
                 name="title"
-                defaultValue={artwork.title}
+                defaultValue={artwork?.title}
+                placeholder={
+                  mode === "create" ? "Ej: Atardecer en High Park" : undefined
+                }
                 required
                 className={`${fieldClass} w-full max-w-[428px]`}
               />
@@ -121,15 +189,18 @@ export function ArtworkEditModal({
             <div className="mt-6 flex gap-4">
               <div className="flex flex-col gap-1.5">
                 <label
-                  htmlFor="edit-medium"
+                  htmlFor="form-medium"
                   className="text-[13px] font-medium text-[#1c1917]"
                 >
                   Técnica
                 </label>
                 <input
-                  id="edit-medium"
+                  id="form-medium"
                   name="medium"
-                  defaultValue={artwork.medium}
+                  defaultValue={artwork?.medium}
+                  placeholder={
+                    mode === "create" ? "Ej: Acrílico sobre tela" : undefined
+                  }
                   required
                   className={`${fieldClass} w-[262px]`}
                 />
@@ -139,16 +210,16 @@ export function ArtworkEditModal({
               </div>
               <div className="flex flex-col gap-1.5">
                 <label
-                  htmlFor="edit-year"
+                  htmlFor="form-year"
                   className="text-[13px] font-medium text-[#1c1917]"
                 >
                   Año
                 </label>
                 <input
-                  id="edit-year"
+                  id="form-year"
                   name="year"
                   type="number"
-                  defaultValue={artwork.year}
+                  defaultValue={artwork?.year}
                   required
                   className={`${fieldClass} w-[150px]`}
                 />
@@ -165,13 +236,13 @@ export function ArtworkEditModal({
               <div className="flex items-center gap-3">
                 <DimensionField
                   name="width"
-                  defaultValue={artwork.width}
+                  defaultValue={artwork?.width}
                   unitLabel="ancho"
                 />
                 <span className="text-[16px] text-[#7c756f]">×</span>
                 <DimensionField
                   name="height"
-                  defaultValue={artwork.height}
+                  defaultValue={artwork?.height}
                   unitLabel="alto"
                 />
                 <Select
@@ -193,19 +264,19 @@ export function ArtworkEditModal({
 
             <div className="mt-6 flex flex-col gap-1.5">
               <label
-                htmlFor="edit-weight"
+                htmlFor="form-weight"
                 className="text-[13px] font-medium text-[#1c1917]"
               >
                 Peso
               </label>
               <div className="flex items-center gap-2">
                 <input
-                  id="edit-weight"
+                  id="form-weight"
                   name="weightKg"
                   type="number"
                   step="0.1"
                   min="0"
-                  defaultValue={artwork.weightKg ?? undefined}
+                  defaultValue={artwork?.weightKg ?? undefined}
                   className={`${fieldClass} w-[160px]`}
                 />
                 <span className="flex h-10 w-[52px] items-center justify-center rounded-[4px] border border-[#e2d8ce] bg-[#f5f2ef] text-[13px] text-[#7c756f]">
@@ -216,22 +287,25 @@ export function ArtworkEditModal({
 
             <div className="mt-6 flex flex-col gap-1.5">
               <label
-                htmlFor="edit-price"
+                htmlFor="form-price"
                 className="text-[13px] font-medium text-[#1c1917]"
               >
                 Precio
               </label>
               <div className="flex h-10 w-[154px] items-center gap-1.5 rounded-[4px] border border-[#e2d8ce] px-3">
                 <span className="text-[13px] text-[#7c756f]">
-                  {artwork.currency}
+                  {artwork?.currency ?? "USD"}
                 </span>
                 <input
-                  id="edit-price"
+                  id="form-price"
                   name="price"
                   type="number"
                   step="0.01"
                   min="0"
-                  defaultValue={(artwork.priceCents / 100).toFixed(2)}
+                  defaultValue={
+                    artwork ? (artwork.priceCents / 100).toFixed(2) : undefined
+                  }
+                  placeholder={mode === "create" ? "0.00" : undefined}
                   required
                   className="w-full text-[14px] text-[#1c1917] outline-none"
                 />
@@ -240,7 +314,7 @@ export function ArtworkEditModal({
 
             <div className="mt-6 flex flex-col gap-1.5">
               <label
-                htmlFor="edit-description"
+                htmlFor="form-description"
                 className="text-[13px] font-medium text-[#1c1917]"
               >
                 Descripción
@@ -249,30 +323,45 @@ export function ArtworkEditModal({
                 La historia de la obra. Se muestra en la ficha pública.
               </p>
               <Textarea
-                id="edit-description"
+                id="form-description"
                 name="description"
-                defaultValue={artwork.description}
+                defaultValue={artwork?.description}
+                placeholder={
+                  mode === "create"
+                    ? "Contá la historia detrás de la obra: qué la inspiró, dónde nació, qué la hace única."
+                    : undefined
+                }
                 required
                 className="min-h-16 w-full max-w-[616px] rounded-[6px] border-[#e0ddd6] text-[13px] text-[#1c1917]"
               />
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-[#e2d8ce] pt-6">
-              <label
-                htmlFor="edit-sold"
-                className="text-[13px] font-medium text-[#1c1917]"
-              >
-                Marcar como vendida
-              </label>
-              <Switch id="edit-sold" checked={sold} onCheckedChange={setSold} />
+            <div className="mt-6 flex flex-col gap-5 border-t border-[#e2d8ce] pt-6">
+              <ToggleRow
+                id="form-sold"
+                label="Marcar como vendida"
+                hint="Usá esto si la obra se vendió fuera del sitio. Las compras online se actualizan automáticamente."
+                checked={sold}
+                onCheckedChange={setSold}
+              />
+              <ToggleRow
+                id="form-visible"
+                label="Visible en el sitio"
+                hint="Ocultala del sitio público sin eliminarla."
+                checked={visible}
+                onCheckedChange={setVisible}
+              />
+              <ToggleRow
+                id="form-featured"
+                label="Destacada"
+                hint="Aparece entre las últimas 4 obras destacadas de la portada."
+                checked={featured}
+                onCheckedChange={setFeatured}
+              />
             </div>
-            <p className="mt-2 text-[11px] text-[#7c756f]">
-              Usá esto si la obra se vendió fuera del sitio. Las compras
-              online se actualizan automáticamente.
-            </p>
 
             {error && (
-              <p className="mt-4 text-[13px] text-destructive">{error}</p>
+              <p className="text-destructive mt-4 text-[13px]">{error}</p>
             )}
           </div>
 
@@ -290,9 +379,9 @@ export function ArtworkEditModal({
             <Button
               type="submit"
               disabled={isPending}
-              className="h-[42px] rounded-[4px] bg-primary px-6 text-[14px] font-medium text-white hover:bg-primary-hover"
+              className="bg-primary hover:bg-primary-hover h-[42px] rounded-[8px] px-6 text-[14px] font-medium text-white"
             >
-              Guardar cambios
+              {mode === "create" ? "Guardar obra" : "Guardar cambios"}
             </Button>
           </div>
         </form>
@@ -307,7 +396,7 @@ function DimensionField({
   unitLabel,
 }: {
   name: string;
-  defaultValue: number;
+  defaultValue?: number;
   unitLabel: string;
 }) {
   return (
@@ -322,6 +411,32 @@ function DimensionField({
         className="w-16 text-[14px] text-[#1c1917] outline-none"
       />
       <span className="text-[12px] text-[#7c756f]">{unitLabel}</span>
+    </div>
+  );
+}
+
+function ToggleRow({
+  id,
+  label,
+  hint,
+  checked,
+  onCheckedChange,
+}: {
+  id: string;
+  label: string;
+  hint: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-0.5">
+        <label htmlFor={id} className="text-[13px] font-medium text-[#1c1917]">
+          {label}
+        </label>
+        <p className="text-[11px] text-[#7c756f]">{hint}</p>
+      </div>
+      <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} />
     </div>
   );
 }

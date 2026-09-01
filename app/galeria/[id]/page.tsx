@@ -2,12 +2,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCurrentCart } from "@/app/actions/cart";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { BuyNowButton } from "@/components/cart/buy-now-button";
 import { ArtworkOptions } from "@/components/galeria/artwork-options";
 import { ArtworkPhotos } from "@/components/galeria/artwork-photos";
 import { RelatedArtworks } from "@/components/galeria/related-artworks";
 import { Badge } from "@/components/ui/badge";
 import { getArtworkById, getArtworks } from "@/lib/db/artworks";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 const ArrowBack = () => (
   <svg
@@ -50,9 +51,10 @@ export default async function ArtworkDetailPage(props: {
     .slice(0, 4);
 
   const isInCart = cart.items.some((item) => item.artworkId === artwork.id);
+  const hasRelatedArtworks = relatedArtworks.length > 0;
 
   return (
-    <div className="px-6 py-12 md:px-10">
+    <div className={cn("px-5 pt-12", !hasRelatedArtworks && "pb-12")}>
       <Link
         href="/galeria"
         className="font-heading mb-8 flex items-center gap-4 text-2xl"
@@ -63,32 +65,69 @@ export default async function ArtworkDetailPage(props: {
       <div className="grid gap-10 md:grid-cols-2">
         <ArtworkPhotos photos={artwork.photos} title={artwork.title} />
         <div className="space-y-6">
-          <div className="flex items-start justify-between gap-4">
-            <h1 className="font-serif text-3xl">{artwork.title}</h1>
-            <Badge variant={artwork.sold ? "secondary" : "outline"}>
-              {artwork.sold ? "Vendida" : "Disponible"}
-            </Badge>
+          <div className="flex items-start justify-between gap-4 border-b border-[#E2D8CE] pb-5">
+            <div className="flex flex-col gap-4">
+              <Badge
+                variant={artwork.sold ? "secondary" : "outline"}
+                className={cn(
+                  "h-[28px] w-[100px] rounded-full border-transparent text-[11px] leading-4 font-medium uppercase tracking-wide",
+                  artwork.sold
+                    ? "bg-[#1C1917] text-[#F3EAE0]"
+                    : "bg-[#E6F0E9] text-[#4D5E51]",
+                )}
+              >
+                {artwork.sold ? "Vendida" : "Disponible"}
+              </Badge>
+              <h1 className="text-[22px] font-semibold">{artwork.title}</h1>
+              <span className="font-sans text-[12px] font-normal text-[#7C756F]">
+                {artwork.medium} - {artwork.width} x {artwork.height} -{" "}
+                {artwork.year}
+              </span>
+            </div>
           </div>
-          <p className="text-lg">
-            {formatPrice(artwork.priceCents, artwork.currency)}
-          </p>
-          <dl className="text-muted-foreground grid grid-cols-2 gap-2 text-sm">
-            <dt>Dimensiones</dt>
-            <dd>
-              {artwork.width} × {artwork.height} {artwork.dimensionUnit}
-            </dd>
-            <dt>Técnica</dt>
-            <dd>{artwork.medium}</dd>
-            <dt>Año</dt>
-            <dd>{artwork.year}</dd>
-          </dl>
-          <p className="text-sm whitespace-pre-line">{artwork.description}</p>
-          <ArtworkOptions />
-          <AddToCartButton
-            artworkId={artwork.id}
-            disabled={artwork.sold}
-            inCart={isInCart}
-          />
+          <div className="flex flex-col gap-10 border-b border-[#E2D8CE] pb-5">
+            <p className="text-[22px] font-semibold">
+              {formatPrice(artwork.priceCents, artwork.currency)}
+            </p>
+            <p className="font-sans text-[12px] font-normal whitespace-pre-line">
+              {artwork.description}
+            </p>
+            <dl className="flex flex-col gap-8 font-sans text-[12px] font-normal">
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">Dimensiones</dt>
+                <dd className="text-[#1A1A1A]">
+                  {artwork.width} × {artwork.height} {artwork.dimensionUnit}
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">Técnica</dt>
+                <dd className="text-[#1A1A1A]">{artwork.medium}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">Año</dt>
+                <dd className="text-[#1A1A1A]">{artwork.year}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">Envío</dt>
+                <dd className="text-[#1A1A1A]">
+                  Incluye envío seguro a todo el mundo
+                </dd>
+              </div>
+            </dl>
+          </div>
+          {/* <ArtworkOptions /> */}
+          <div className="flex flex-col gap-3">
+            <BuyNowButton
+              artworkId={artwork.id}
+              disabled={artwork.sold}
+              inCart={isInCart}
+            />
+            <AddToCartButton
+              artworkId={artwork.id}
+              disabled={artwork.sold}
+              inCart={isInCart}
+            />
+          </div>
         </div>
       </div>
       <RelatedArtworks artworks={relatedArtworks} />
