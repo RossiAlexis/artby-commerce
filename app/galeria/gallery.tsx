@@ -56,7 +56,11 @@ export function Gallery({
       >
         <TabsList>
           {FILTERS.map(({ value, label }) => (
-            <TabsTrigger key={value} value={value}>
+            <TabsTrigger
+              key={value}
+              value={value}
+              className="data-active:px-5 data-active:py-4"
+            >
               {label}
             </TabsTrigger>
           ))}
@@ -80,6 +84,11 @@ export function Gallery({
                     className="object-cover"
                     sizes="(min-width: 768px) 25vw, 50vw"
                   />
+                )}
+                {artwork.sold && (
+                  <span className="absolute top-2 left-2 rounded-full bg-[#1C1917] px-2.5 py-1 text-[10px] leading-4 font-medium tracking-wide text-[#F3EAE0] uppercase">
+                    Vendida
+                  </span>
                 )}
               </div>
               <div className="space-y-1 px-1.5 py-3">

@@ -70,7 +70,7 @@ export default async function ArtworkDetailPage(props: {
               <Badge
                 variant={artwork.sold ? "secondary" : "outline"}
                 className={cn(
-                  "h-[28px] w-[100px] rounded-full border-transparent text-[11px] leading-4 font-medium uppercase tracking-wide",
+                  "h-[28px] w-[100px] rounded-full border-transparent text-[11px] leading-4 font-medium tracking-wide uppercase",
                   artwork.sold
                     ? "bg-[#1C1917] text-[#F3EAE0]"
                     : "bg-[#E6F0E9] text-[#4D5E51]",
@@ -92,6 +92,8 @@ export default async function ArtworkDetailPage(props: {
             <p className="font-sans text-[12px] font-normal whitespace-pre-line">
               {artwork.description}
             </p>
+          </div>
+          <div className="flex flex-col gap-10 border-b border-[#E2D8CE] pb-5">
             <dl className="flex flex-col gap-8 font-sans text-[12px] font-normal">
               <div className="flex items-center justify-between gap-4">
                 <dt className="text-muted-foreground">Dimensiones</dt>

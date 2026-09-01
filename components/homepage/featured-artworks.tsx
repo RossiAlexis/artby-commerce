@@ -42,6 +42,11 @@ export function FeaturedArtworks({
                     sizes="(min-width: 768px) 25vw, 50vw"
                   />
                 )}
+                {artwork.sold && (
+                  <span className="absolute top-2 left-2 rounded-full bg-[#1C1917] px-2.5 py-1 text-[10px] leading-4 font-medium tracking-wide text-[#F3EAE0] uppercase">
+                    Vendida
+                  </span>
+                )}
               </div>
               <div className="space-y-1 px-1.5 py-3">
                 <p className="text-sm font-medium">{artwork.title}</p>
