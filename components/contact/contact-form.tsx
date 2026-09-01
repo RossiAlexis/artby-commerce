@@ -2,6 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { contactAction } from "@/app/actions/contact";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export function ContactForm() {
   const [isPending, startTransition] = useTransition();
@@ -42,64 +46,64 @@ export function ContactForm() {
       ) : (
         <form action={handleSubmit} className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-1.5">
-            <label
+            <Label
               htmlFor="name"
               className="text-foreground text-[0.8125rem] font-medium"
             >
               Nombre
-            </label>
-            <input
+            </Label>
+            <Input
               id="name"
               name="name"
               type="text"
               required
               disabled={isPending}
               placeholder="Tu nombre"
-              className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+              className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label
+            <Label
               htmlFor="email"
               className="text-foreground text-[0.8125rem] font-medium"
             >
               Email
-            </label>
-            <input
+            </Label>
+            <Input
               id="email"
               name="email"
               type="email"
               required
               disabled={isPending}
               placeholder="tuemail@email.com"
-              className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+              className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label
+            <Label
               htmlFor="message"
               className="text-foreground text-[0.8125rem] font-medium"
             >
               Mensaje
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               id="message"
               name="message"
               required
               disabled={isPending}
               placeholder="Contame en qué te puedo ayudar…"
               rows={5}
-              className="focus-visible:border-ring h-[7.5rem] w-full resize-none rounded-sm border border-[#e2d8ce] bg-white px-3.5 py-3 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+              className="h-[7.5rem] resize-none rounded-sm border-[#e2d8ce] bg-white px-3.5 py-3 text-[0.8125rem] text-[#7c756f]"
             />
           </div>
           {error && <p className="text-destructive text-xs">{error}</p>}
-          <button
+          <Button
             type="submit"
             disabled={isPending}
-            className="bg-primary hover:bg-primary/90 w-full rounded-md px-8 py-3.5 text-sm font-medium text-white disabled:opacity-50 lg:w-fit"
+            className="bg-primary hover:bg-primary/90 h-12 w-full rounded-md px-8 text-sm font-medium text-white lg:w-fit"
           >
             {isPending ? "Enviando…" : "Enviar mensaje"}
-          </button>
+          </Button>
         </form>
       )}
     </div>

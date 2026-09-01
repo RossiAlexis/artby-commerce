@@ -1,7 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { db } from "./client";
 import { getAdminOrderById, getAdminOrders } from "./orders-admin";
 import { artworks, orderItems, orders } from "./schema";
+
+// getAdminOrders/getAdminOrderById require an admin session — stand in for
+// the real Auth.js session lookup, which needs a request context this
+// unit test has none of.
+vi.mock("@/auth", () => ({
+  auth: vi.fn().mockResolvedValue({ user: { isAdmin: true } }),
+}));
 
 async function insertArtwork(
   overrides: Partial<typeof artworks.$inferInsert> = {},
@@ -51,7 +58,7 @@ async function insertOrderItem(
 }
 
 describe("getAdminOrders", () => {
-  it("lists every Order, newest first, with buyer, Artwork(s), amount, and date", async () => {
+  it("lists every Order, newest first, with Customer, Artwork(s), amount, and date", async () => {
     const first = await insertArtwork({ title: "First", priceCents: 10_000 });
     const older = await insertOrder({
       customerName: "Older Customer",

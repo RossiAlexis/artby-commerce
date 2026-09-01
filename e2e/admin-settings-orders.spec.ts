@@ -28,11 +28,11 @@ test("admin edits Mi sitio and the change reflects on the public site", async ({
 test("admin can view the Orders list and open a single Order's detail", async ({
   page,
 }) => {
-  const { buyerName, title, priceCents } = ARTWORK.sold;
+  const { customerName, title, priceCents } = ARTWORK.sold;
   const amount = `USD ${priceCents / 100}`;
 
   await page.goto("/admin/orders");
-  const row = page.locator("tr", { hasText: ARTWORK.sold.buyerName });
+  const row = page.locator("tr", { hasText: ARTWORK.sold.customerName });
   await expect(row).toBeVisible();
   await expect(row.getByText(title)).toBeVisible();
   await expect(row.getByText(amount)).toBeVisible();
@@ -40,8 +40,8 @@ test("admin can view the Orders list and open a single Order's detail", async ({
   await row.getByRole("link", { name: "Ver detalle" }).click();
   await page.waitForURL(/\/admin\/orders\/\d+$/);
 
-  await expect(page.getByText(buyerName)).toBeVisible();
-  await expect(page.getByText(ARTWORK.sold.buyerEmail)).toBeVisible();
+  await expect(page.getByText(customerName)).toBeVisible();
+  await expect(page.getByText(ARTWORK.sold.customerEmail)).toBeVisible();
   await expect(page.getByText(title)).toBeVisible();
   await expect(page.getByText(amount).first()).toBeVisible();
 });
