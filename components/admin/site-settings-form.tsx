@@ -175,7 +175,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
       <Button
         type="submit"
         disabled={isPending}
-        className="w-[168px] self-start bg-primary py-[13px] text-white hover:bg-primary-hover"
+        className="bg-primary hover:bg-primary-hover w-[168px] self-start py-[13px] text-white"
       >
         {isPending ? "Guardando…" : "Guardar cambios"}
       </Button>

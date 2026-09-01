@@ -27,7 +27,10 @@ const artworkFieldsSchema = z.object({
   height: z.coerce.number().positive(),
   dimensionUnit: z.enum(["cm", "in"]),
   weightKg: z.preprocess(
-    (value) => (value === "" || value === null || value === undefined ? null : Number(value)),
+    (value) =>
+      value === "" || value === null || value === undefined
+        ? null
+        : Number(value),
     z.number().positive().nullable(),
   ),
   medium: z.string().trim().min(1),

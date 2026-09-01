@@ -7,7 +7,12 @@ import {
   setArtworkFlagsAction,
 } from "@/app/actions/admin-artworks";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function DeleteArtworkButton({
   artworkId,
@@ -58,7 +63,9 @@ export function DeleteArtworkButton({
         }
       }}
     >
-      <DialogTrigger render={trigger ?? <Button variant="destructive" size="sm" />}>
+      <DialogTrigger
+        render={trigger ?? <Button variant="destructive" size="sm" />}
+      >
         {label}
       </DialogTrigger>
       <DialogContent
@@ -70,13 +77,13 @@ export function DeleteArtworkButton({
         </p>
         <div className="flex flex-col gap-3 text-[13px] text-[#4a4845]">
           <p>
-            Esta acción no se puede deshacer. La obra y sus fotos se quitan
-            del sitio y del panel.
+            Esta acción no se puede deshacer. La obra y sus fotos se quitan del
+            sitio y del panel.
           </p>
           {blockedByOrder ? (
             <p>
-              Esta obra está referenciada por un pedido y no puede
-              eliminarse — podés ocultarla en su lugar.
+              Esta obra está referenciada por un pedido y no puede eliminarse —
+              podés ocultarla en su lugar.
             </p>
           ) : (
             <p>
@@ -85,7 +92,7 @@ export function DeleteArtworkButton({
             </p>
           )}
         </div>
-        {error && <p className="text-[13px] text-destructive">{error}</p>}
+        {error && <p className="text-destructive text-[13px]">{error}</p>}
         <div className="flex w-full items-center justify-end gap-3">
           <DialogClose
             render={
@@ -102,7 +109,7 @@ export function DeleteArtworkButton({
               type="button"
               onClick={handleHideInstead}
               disabled={isPending}
-              className="rounded-[8px] bg-primary px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-50"
+              className="bg-primary hover:bg-primary-hover rounded-[8px] px-[18px] py-2.5 text-[14px] font-medium text-white disabled:opacity-50"
             >
               Ocultar en su lugar
             </button>
@@ -111,7 +118,7 @@ export function DeleteArtworkButton({
               type="button"
               onClick={handleDelete}
               disabled={isPending}
-              className="rounded-[8px] bg-primary px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-50"
+              className="bg-primary hover:bg-primary-hover rounded-[8px] px-[18px] py-2.5 text-[14px] font-medium text-white disabled:opacity-50"
             >
               Sí, eliminar
             </button>

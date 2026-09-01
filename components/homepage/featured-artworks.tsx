@@ -30,7 +30,7 @@ export function FeaturedArtworks({
             <Link
               key={artwork.id}
               href={`/galeria/${artwork.id}`}
-                  className="bg-card block"
+              className="bg-card block"
             >
               <div className="bg-muted relative aspect-square overflow-hidden">
                 {heroPhoto && (
