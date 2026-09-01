@@ -18,8 +18,8 @@ export const ARTWORK = {
   sold: {
     title: "Retrato Vendido E2E",
     priceCents: 60_000,
-    buyerEmail: "sold-buyer-e2e@example.com",
-    buyerName: "Comprador Previo",
+    customerEmail: "sold-buyer-e2e@example.com",
+    customerName: "Comprador Previo",
   },
   /** Exclusive to admin-artworks.spec.ts's "delete succeeds" test. */
   deleteMe: {
@@ -34,8 +34,8 @@ export const ARTWORK = {
   blockedDelete: {
     title: "Obra Reservada E2E",
     priceCents: 55_000,
-    buyerEmail: "blocked-buyer-e2e@example.com",
-    buyerName: "Comprador Bloqueante",
+    customerEmail: "blocked-buyer-e2e@example.com",
+    customerName: "Comprador Bloqueante",
   },
   /** Exclusive to admin-artworks.spec.ts's "toggle flags" test. */
   toggleMe: {

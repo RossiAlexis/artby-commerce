@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contactAction } from "./contact";
+import { contactAction } from "@/app/actions/contact";
 
 describe("contactAction", () => {
   // Resend's sandbox address always "delivers" without actually emailing

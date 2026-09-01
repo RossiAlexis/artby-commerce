@@ -15,7 +15,7 @@ export function OrderDetailSections({
   if (variant === "flat") {
     return (
       <>
-        <h2 className={flatLabelClass}>Comprador</h2>
+        <h2 className={flatLabelClass}>Cliente</h2>
         <p className="text-[13px] font-medium text-[#1c1917]">
           {order.customerName}
         </p>

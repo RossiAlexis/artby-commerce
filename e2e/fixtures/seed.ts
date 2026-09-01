@@ -120,13 +120,17 @@ export async function seedTestData(databaseUrl: string) {
 
   async function insertOrderFor(
     artworkId: number,
-    fixture: { buyerName: string; buyerEmail: string; priceCents: number },
+    fixture: {
+      customerName: string;
+      customerEmail: string;
+      priceCents: number;
+    },
   ) {
     const [order] = await db
       .insert(orders)
       .values({
-        customerName: fixture.buyerName,
-        customerEmail: fixture.buyerEmail,
+        customerName: fixture.customerName,
+        customerEmail: fixture.customerEmail,
         totalCents: fixture.priceCents,
       })
       .returning();

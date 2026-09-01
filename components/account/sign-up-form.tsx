@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { signUpCustomer } from "@/app/actions/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SignUpForm() {
   const router = useRouter();
@@ -58,46 +61,46 @@ export function SignUpForm() {
 
       <form action={handleSubmit} className="flex flex-col gap-3.5">
         <div className="flex flex-col gap-1.5">
-          <label
+          <Label
             htmlFor="name"
             className="text-foreground text-[0.8125rem] font-medium"
           >
             Nombre
-          </label>
-          <input
+          </Label>
+          <Input
             id="name"
             name="name"
             type="text"
             disabled={isPending}
             placeholder="Tu nombre (opcional)"
-            className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+            className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label
+          <Label
             htmlFor="email"
             className="text-foreground text-[0.8125rem] font-medium"
           >
             Email
-          </label>
-          <input
+          </Label>
+          <Input
             id="email"
             name="email"
             type="email"
             required
             disabled={isPending}
             placeholder="tuemail@email.com"
-            className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+            className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label
+          <Label
             htmlFor="password"
             className="text-foreground text-[0.8125rem] font-medium"
           >
             Contraseña
-          </label>
-          <input
+          </Label>
+          <Input
             id="password"
             name="password"
             type="password"
@@ -105,17 +108,17 @@ export function SignUpForm() {
             minLength={8}
             disabled={isPending}
             placeholder="Mínimo 8 caracteres"
-            className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+            className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
           />
         </div>
         {error && <p className="text-destructive text-xs">{error}</p>}
-        <button
+        <Button
           type="submit"
           disabled={isPending}
-          className="bg-primary hover:bg-primary/90 w-full rounded-md px-8 py-3.5 text-sm font-medium text-white disabled:opacity-50"
+          className="bg-primary hover:bg-primary/90 h-12 w-full rounded-md px-8 text-sm font-medium text-white"
         >
           {isPending ? "Creando cuenta…" : "Crear cuenta"}
-        </button>
+        </Button>
       </form>
 
       <p className="text-center text-[0.8125rem] text-[#7c756f]">

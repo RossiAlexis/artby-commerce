@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function SignInForm({ callbackUrl }: { callbackUrl: string }) {
   const router = useRouter();
@@ -40,47 +43,47 @@ export function SignInForm({ callbackUrl }: { callbackUrl: string }) {
 
       <form action={handleSubmit} className="flex flex-col gap-3.5">
         <div className="flex flex-col gap-1.5">
-          <label
+          <Label
             htmlFor="email"
             className="text-foreground text-[0.8125rem] font-medium"
           >
             Email
-          </label>
-          <input
+          </Label>
+          <Input
             id="email"
             name="email"
             type="email"
             required
             disabled={isPending}
             placeholder="tuemail@email.com"
-            className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+            className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label
+          <Label
             htmlFor="password"
             className="text-foreground text-[0.8125rem] font-medium"
           >
             Contraseña
-          </label>
-          <input
+          </Label>
+          <Input
             id="password"
             name="password"
             type="password"
             required
             disabled={isPending}
             placeholder="Tu contraseña"
-            className="focus-visible:border-ring h-11 w-full rounded-sm border border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f] outline-none disabled:opacity-50"
+            className="h-11 rounded-sm border-[#e2d8ce] bg-white px-3.5 text-[0.8125rem] text-[#7c756f]"
           />
         </div>
         {error && <p className="text-destructive text-xs">{error}</p>}
-        <button
+        <Button
           type="submit"
           disabled={isPending}
-          className="bg-primary hover:bg-primary/90 w-full rounded-md px-8 py-3.5 text-sm font-medium text-white disabled:opacity-50"
+          className="bg-primary hover:bg-primary/90 h-12 w-full rounded-md px-8 text-sm font-medium text-white"
         >
           {isPending ? "Ingresando…" : "Ingresar"}
-        </button>
+        </Button>
       </form>
 
       <div className="flex items-center gap-3">
@@ -89,14 +92,15 @@ export function SignInForm({ callbackUrl }: { callbackUrl: string }) {
         <div className="h-px flex-1 bg-[#e2d8ce]" />
       </div>
 
-      <button
+      <Button
         type="button"
+        variant="outline"
         disabled={isPending}
         onClick={() => signIn("google", { redirectTo: callbackUrl })}
-        className="w-full rounded-md border border-[#e2d8ce] bg-white px-8 py-3.5 text-sm font-medium text-[#1c1917] hover:bg-[#f5f2ef] disabled:opacity-50"
+        className="h-12 w-full rounded-md border-[#e2d8ce] bg-white px-8 text-sm font-medium text-[#1c1917] hover:bg-[#f5f2ef]"
       >
         Continuar con Google
-      </button>
+      </Button>
 
       <p className="text-center text-[0.8125rem] text-[#7c756f]">
         ¿No tenés cuenta?{" "}
