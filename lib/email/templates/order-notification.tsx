@@ -18,6 +18,12 @@ type OrderNotificationEmailProps = {
     customerEmail: string;
     totalCents: number;
     currency: string;
+    shippingCity: string;
+    shippingCountry: string;
+    shippingAddress: string;
+    isGift: boolean;
+    giftRecipientName: string | null;
+    giftMessage: string | null;
     items: { title: string; priceCents: number }[];
   };
 };
@@ -53,6 +59,20 @@ export function OrderNotificationEmail({ order }: OrderNotificationEmailProps) {
               </Text>
             </Column>
           </Row>
+          <Hr />
+          <Text style={{ fontWeight: "bold" }}>Envío a</Text>
+          <Text>
+            {order.shippingAddress}, {order.shippingCity},{" "}
+            {order.shippingCountry}
+          </Text>
+          {order.isGift && (
+            <>
+              <Text style={{ fontWeight: "bold" }}>
+                Es un regalo para {order.giftRecipientName}
+              </Text>
+              {order.giftMessage && <Text>{`"${order.giftMessage}"`}</Text>}
+            </>
+          )}
         </Container>
       </Body>
     </Html>

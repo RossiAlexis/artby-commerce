@@ -71,6 +71,13 @@
       "when": 1787630258611,
       "tag": "0009_living_ser_duncan",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787697412469,
+      "tag": "0010_supreme_mole_man",
+      "breakpoints": true
     }
   ]
 }

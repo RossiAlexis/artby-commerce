@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OrderDetailSheet } from "@/components/admin/order-detail-sheet";
 import {
   Table,
   TableBody,
@@ -74,37 +75,8 @@ export default async function AdminOrdersPage() {
               </Table>
             </div>
 
-            {/* Stacked cards, below sm. */}
-            <div className="flex flex-col gap-3 sm:hidden">
-              {orders.map((order) => (
-                <Link
-                  key={order.id}
-                  href={`/admin/orders/${order.id}`}
-                  className="flex flex-col gap-1 rounded-lg bg-white p-4"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-[15px] font-semibold text-[#1c1917]">
-                      {order.customerName}
-                    </p>
-                    <p className="text-[13px] font-medium whitespace-nowrap text-[#1c1917]">
-                      {formatPrice(order.totalCents, order.currency)}
-                    </p>
-                  </div>
-                  <p className="text-[13px] text-[#7c756f]">
-                    {order.customerEmail}
-                  </p>
-                  <p className="text-[13px] text-[#7c756f]">
-                    {order.items.map((item) => item.artwork.title).join(", ")}
-                  </p>
-                  <p className="text-[13px] text-[#7c756f]">
-                    {formatDate(order.createdAt, {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
-                  </p>
-                </Link>
-              ))}
-            </div>
+            {/* Stacked cards + detail bottom sheet, below sm. */}
+            <OrderDetailSheet orders={orders} />
           </>
         )}
       </div>

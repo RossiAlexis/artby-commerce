@@ -200,6 +200,16 @@ export const orders = pgTable("orders", {
   customerId: text("customer_id").references(() => users.id, {
     onDelete: "set null",
   }),
+  // Defaults to "" only to backfill the handful of pre-existing Orders from
+  // before shipping collection existed — checkoutCart always provides a
+  // real value going forward.
+  shippingCity: text("shipping_city").notNull().default(""),
+  shippingCountry: text("shipping_country").notNull().default(""),
+  shippingAddress: text("shipping_address").notNull().default(""),
+  isGift: boolean("is_gift").notNull().default(false),
+  // Only set when isGift is true.
+  giftRecipientName: text("gift_recipient_name"),
+  giftMessage: text("gift_message"),
   totalCents: integer("total_cents").notNull(),
   currency: text("currency").notNull().default("USD"),
   createdAt: timestamp("created_at", { withTimezone: true })

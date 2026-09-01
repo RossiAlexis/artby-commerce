@@ -22,6 +22,13 @@ export type CheckoutInput = {
   // resulting Order with their account (see CONTEXT.md: Orders are optional
   // to associate, never required, since checkout also supports guests).
   customerId?: string;
+  shippingCity: string;
+  shippingCountry: string;
+  shippingAddress: string;
+  isGift: boolean;
+  // Only meaningful when isGift is true.
+  giftRecipientName?: string;
+  giftMessage?: string;
 };
 
 /**
@@ -36,6 +43,12 @@ export async function checkoutCart({
   customerName,
   customerEmail,
   customerId,
+  shippingCity,
+  shippingCountry,
+  shippingAddress,
+  isGift,
+  giftRecipientName,
+  giftMessage,
 }: CheckoutInput) {
   const now = new Date();
 
@@ -84,6 +97,12 @@ export async function checkoutCart({
         customerName,
         customerEmail,
         customerId,
+        shippingCity,
+        shippingCountry,
+        shippingAddress,
+        isGift,
+        giftRecipientName: isGift ? giftRecipientName : null,
+        giftMessage: isGift ? giftMessage : null,
         totalCents,
         currency: sold[0].currency,
       })
@@ -102,16 +121,26 @@ export async function checkoutCart({
     return { ...order, items: sold };
   });
 
+  // The Order itself already committed above — a failed confirmation or
+  // notification email (e.g. a provider outage) must never turn an
+  // otherwise-successful purchase into a checkout error for the Customer.
   await Promise.all([
     sendEmail({
       to: order.customerEmail,
       subject: `Confirmación de tu compra — Orden #${order.id}`,
       template: OrderConfirmationEmail({ order }),
+    }).catch((error) => {
+      console.error(`Order #${order.id} confirmation email failed:`, error);
     }),
     sendEmail({
       to: requireEnv("ADMIN_EMAIL"),
       subject: `Nueva Orden #${order.id}`,
       template: OrderNotificationEmail({ order }),
+    }).catch((error) => {
+      console.error(
+        `Order #${order.id} admin notification email failed:`,
+        error,
+      );
     }),
   ]);
 

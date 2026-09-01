@@ -42,6 +42,26 @@ export default async function OrderDetailPage(props: {
         </p>
       </div>
 
+      <div className="rounded-lg border border-[#e2d8ce] bg-white px-5 py-4">
+        <h2 className="text-foreground text-sm font-semibold">Envío</h2>
+        <p className="mt-1 text-sm text-[#7c756f]">
+          {order.shippingAddress}, {order.shippingCity}, {order.shippingCountry}
+        </p>
+        {order.isGift && (
+          <div className="mt-3 border-t border-[#e2d8ce] pt-3">
+            <p className="text-foreground text-sm">
+              Es un regalo para{" "}
+              <span className="font-medium">{order.giftRecipientName}</span>
+            </p>
+            {order.giftMessage && (
+              <p className="mt-1 text-sm text-[#7c756f]">
+                {`"${order.giftMessage}"`}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
       <ul className="flex flex-col gap-3.5">
         {order.items.map((item) => (
           <li

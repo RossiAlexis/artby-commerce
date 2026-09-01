@@ -72,6 +72,10 @@ async function insertOrder(
 const GUEST = {
   customerName: "Jane Doe",
   customerEmail: "delivered@resend.dev",
+  shippingCity: "Springfield",
+  shippingCountry: "USA",
+  shippingAddress: "123 Main St",
+  isGift: false,
 };
 
 describe("checkoutCart", () => {
@@ -160,16 +164,11 @@ describe("checkoutCart", () => {
     const cart = await insertCart();
     await addToCart(cart.id, artwork.id);
 
-    // The transaction that creates the Order (and sets customerId) commits
-    // before checkoutCart sends its confirmation emails — and this
-    // environment's RESEND_API_KEY is a placeholder that Resend always
-    // rejects (see the email-wiring test skip above), so this call reliably
-    // rejects too. That's fine: the Order is already committed by then, so
-    // we assert the association directly against the DB afterwards instead
-    // of against checkoutCart's own (unreachable-here) return value.
-    await expect(
-      checkoutCart({ cartId: cart.id, customerId: customer.id, ...GUEST }),
-    ).rejects.toThrow();
+    // A failed confirmation/notification email must never fail the
+    // checkout itself (see checkoutCart's own comment) — this environment's
+    // RESEND_API_KEY is a placeholder Resend always rejects, so this also
+    // covers that the Order still commits successfully despite it.
+    await checkoutCart({ cartId: cart.id, customerId: customer.id, ...GUEST });
 
     const customerOrders = await getOrdersByCustomer(customer.id);
     expect(customerOrders).toHaveLength(1);
@@ -185,15 +184,65 @@ describe("checkoutCart", () => {
     // below can't pick up an unrelated Order sharing GUEST's fixed address.
     const guestEmail = uniqueEmail();
 
-    await expect(
-      checkoutCart({ cartId: cart.id, ...GUEST, customerEmail: guestEmail }),
-    ).rejects.toThrow();
+    await checkoutCart({
+      cartId: cart.id,
+      ...GUEST,
+      customerEmail: guestEmail,
+    });
 
     const [order] = await db
       .select()
       .from(orders)
       .where(eq(orders.customerEmail, guestEmail));
     expect(order.customerId).toBeNull();
+  });
+
+  it("persists shipping and gift details on the Order", async () => {
+    const artwork = await insertArtwork();
+    const cart = await insertCart();
+    await addToCart(cart.id, artwork.id);
+    const guestEmail = uniqueEmail();
+
+    await checkoutCart({
+      cartId: cart.id,
+      ...GUEST,
+      customerEmail: guestEmail,
+      isGift: true,
+      giftRecipientName: "Maria Doe",
+      giftMessage: "Feliz cumpleaños",
+    });
+
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.customerEmail, guestEmail));
+    expect(order.shippingCity).toBe(GUEST.shippingCity);
+    expect(order.shippingCountry).toBe(GUEST.shippingCountry);
+    expect(order.shippingAddress).toBe(GUEST.shippingAddress);
+    expect(order.isGift).toBe(true);
+    expect(order.giftRecipientName).toBe("Maria Doe");
+    expect(order.giftMessage).toBe("Feliz cumpleaños");
+  });
+
+  it("clears gift fields when isGift is false, even if gift text was passed", async () => {
+    const artwork = await insertArtwork();
+    const cart = await insertCart();
+    await addToCart(cart.id, artwork.id);
+    const guestEmail = uniqueEmail();
+
+    await checkoutCart({
+      cartId: cart.id,
+      ...GUEST,
+      customerEmail: guestEmail,
+      giftRecipientName: "Should be ignored",
+    });
+
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.customerEmail, guestEmail));
+    expect(order.giftRecipientName).toBeNull();
+    expect(order.giftMessage).toBeNull();
   });
 });
 

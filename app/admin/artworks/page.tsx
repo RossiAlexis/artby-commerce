@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { ArtworkCard } from "@/components/admin/artwork-card";
+import { ArtworkCreateButton } from "@/components/admin/artwork-create-button";
 import { getAdminArtworks } from "@/lib/db/artworks-admin";
-import { artworksFilterSchema, type ArtworksFilter } from "@/lib/db/artworks-filter";
+import {
+  artworksFilterSchema,
+  type ArtworksFilter,
+} from "@/lib/db/artworks-filter";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -32,18 +36,11 @@ export default async function AdminArtworksPage(props: {
 
   return (
     <div>
-      <div className="flex h-[72px] items-center justify-between border-b border-[#e2d8ce] bg-white px-10">
+      <div className="flex h-[72px] items-center justify-between border-b border-[#e2d8ce] bg-white px-5 sm:px-10">
         <h1 className="text-xl font-semibold text-[#1c1917]">Mis obras</h1>
-        {filter !== "sold" && (
-          <Link
-            href="/admin/artworks/new"
-            className="rounded-[4px] bg-primary px-[26px] py-[11px] text-sm font-medium text-white hover:bg-primary-hover"
-          >
-            + Agregar obra
-          </Link>
-        )}
+        {filter !== "sold" && <ArtworkCreateButton variant="header" />}
       </div>
-      <div className="flex items-center gap-8 px-10 pt-6">
+      <div className="flex items-center gap-5 px-5 pt-6 sm:gap-8 sm:px-10">
         {TABS.map((tab) => (
           <Link
             key={tab.value}
@@ -53,9 +50,9 @@ export default async function AdminArtworksPage(props: {
                 : `/admin/artworks?status=${tab.value}`
             }
             className={cn(
-              "border-b-2 pb-2.5 text-sm",
+              "border-b-2 pb-2.5 text-sm whitespace-nowrap",
               filter === tab.value
-                ? "border-primary font-medium text-primary"
+                ? "border-primary text-primary font-medium"
                 : "border-transparent text-[#7c756f]",
             )}
           >
@@ -63,19 +60,11 @@ export default async function AdminArtworksPage(props: {
           </Link>
         ))}
       </div>
-      <div className="grid grid-cols-1 gap-[25px] px-10 py-9 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-[25px] px-5 py-9 sm:grid-cols-2 sm:px-10 xl:grid-cols-3">
         {visibleArtworks.map((artwork) => (
           <ArtworkCard key={artwork.id} artwork={artwork} />
         ))}
-        {filter !== "sold" && (
-          <Link
-            href="/admin/artworks/new"
-            className="flex h-[310px] flex-col items-center justify-center rounded-lg border-[1.5px] border-dashed border-[#e2d8ce] bg-white text-primary hover:bg-[#f5f2ef]"
-          >
-            <span className="text-3xl leading-none">+</span>
-            <span className="mt-2 text-sm text-[#7c756f]">Agregar obra</span>
-          </Link>
-        )}
+        {filter !== "sold" && <ArtworkCreateButton variant="tile" />}
         {visibleArtworks.length === 0 && (
           <p className="col-span-full text-sm text-[#7c756f]">
             No hay obras en esta categoría.
