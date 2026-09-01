@@ -160,13 +160,11 @@ describe("deleteArtwork", () => {
 describe("addArtworkPhoto / deleteArtworkPhoto", () => {
   it("appends a photo after the current highest position", async () => {
     const artwork = await insertArtwork();
-    await db
-      .insert(artworkPhotos)
-      .values({
-        artworkId: artwork.id,
-        url: "https://example.com/0.jpg",
-        position: 0,
-      });
+    await db.insert(artworkPhotos).values({
+      artworkId: artwork.id,
+      url: "https://example.com/0.jpg",
+      position: 0,
+    });
 
     const photo = await addArtworkPhoto(
       artwork.id,

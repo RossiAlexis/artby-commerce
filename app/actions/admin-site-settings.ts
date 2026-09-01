@@ -21,8 +21,7 @@ const siteSettingsFieldsSchema = z.object({
 export type SiteSettingsFormInput = z.infer<typeof siteSettingsFieldsSchema>;
 
 export type SiteSettingsFormResult =
-  | { success: true }
-  | { success: false; error: string };
+  { success: true } | { success: false; error: string };
 
 export async function updateSiteSettingsAction(
   input: SiteSettingsFormInput,
@@ -54,8 +53,7 @@ export async function updateSiteSettingsAction(
 export type SiteSettingsImageField = "cover" | "about";
 
 export type UploadSiteSettingsImageResult =
-  | { success: true; url: string }
-  | { success: false; error: string };
+  { success: true; url: string } | { success: false; error: string };
 
 export async function uploadSiteSettingsImageAction(
   field: SiteSettingsImageField,
@@ -77,11 +75,15 @@ export async function uploadSiteSettingsImageAction(
   const current = await getSiteSettings();
   const columnKey = field === "cover" ? "coverImageUrl" : "aboutImageUrl";
 
-  const blob = await put(`site-settings/${field}/${crypto.randomUUID()}`, file, {
-    access: "public",
-    oidcToken: process.env.VERCEL_OIDC_TOKEN,
-    storeId: process.env.BLOB_STORE_ID,
-  });
+  const blob = await put(
+    `site-settings/${field}/${crypto.randomUUID()}`,
+    file,
+    {
+      access: "public",
+      oidcToken: process.env.VERCEL_OIDC_TOKEN,
+      storeId: process.env.BLOB_STORE_ID,
+    },
+  );
 
   await updateSiteSettings({ [columnKey]: blob.url });
 
