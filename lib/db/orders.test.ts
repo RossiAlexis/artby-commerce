@@ -1,10 +1,13 @@
 import { eq } from "drizzle-orm";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { resend } from "@/lib/email/client";
 import { addToCart, getCart } from "./cart";
 import { db } from "./client";
 import { EmptyCartError, ReservationExpiredError } from "./order-errors";
 import { checkoutCart, getOrderById, getOrdersByCustomer } from "./orders";
 import { artworks, carts, orderItems, orders, users } from "./schema";
+
+const sendMock = vi.mocked(resend.emails.send);
 
 async function insertArtwork(
   overrides: Partial<typeof artworks.$inferInsert> = {},
@@ -63,12 +66,11 @@ async function insertOrder(
   return order;
 }
 
-// Resend's sandbox address always "delivers" without actually emailing
-// anyone (https://resend.com/docs/dashboard/emails/send-test-emails).
-// checkoutCart awaits both the Customer and admin email sends and throws
-// if either fails, so a resolved checkoutCart call here also proves both
-// emails sent successfully — the assertion that they were sent is implicit
-// in the promise not rejecting.
+// checkoutCart's confirmation/notification emails go through a mocked
+// Resend client (test/setup/mock-email.ts) that never touches the network —
+// checkoutCart must still be reachable from a guest with no real inbox, and
+// a valid RESEND_API_KEY must never cause these tests to email the real
+// ADMIN_EMAIL address or burn Resend's send quota.
 const GUEST = {
   customerName: "Jane Doe",
   customerEmail: "delivered@resend.dev",
@@ -79,8 +81,11 @@ const GUEST = {
 };
 
 describe("checkoutCart", () => {
-  // Skipped: requires a valid RESEND_API_KEY (currently 401s), see email test skip.
-  it.skip("completes an Order covering every reserved Artwork, flips them to Sold, and clears the Cart", async () => {
+  beforeEach(() => {
+    sendMock.mockClear();
+  });
+
+  it("completes an Order covering every reserved Artwork, flips them to Sold, and clears the Cart", async () => {
     const first = await insertArtwork({ title: "First", priceCents: 10_000 });
     const second = await insertArtwork({
       title: "Second",
@@ -108,6 +113,13 @@ describe("checkoutCart", () => {
 
     const { items } = await getCart(cart.id);
     expect(items).toEqual([]);
+
+    expect(sendMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: GUEST.customerEmail }),
+    );
+    expect(sendMock).toHaveBeenCalledWith(
+      expect.objectContaining({ to: process.env.ADMIN_EMAIL }),
+    );
   });
 
   it("throws EmptyCartError for a Cart with no items", async () => {
@@ -164,10 +176,6 @@ describe("checkoutCart", () => {
     const cart = await insertCart();
     await addToCart(cart.id, artwork.id);
 
-    // A failed confirmation/notification email must never fail the
-    // checkout itself (see checkoutCart's own comment) — this environment's
-    // RESEND_API_KEY is a placeholder Resend always rejects, so this also
-    // covers that the Order still commits successfully despite it.
     await checkoutCart({ cartId: cart.id, customerId: customer.id, ...GUEST });
 
     const customerOrders = await getOrdersByCustomer(customer.id);
