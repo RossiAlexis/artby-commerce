@@ -2,10 +2,9 @@ import { describe, expect, it } from "vitest";
 import { contactAction } from "@/app/actions/contact";
 
 describe("contactAction", () => {
-  // Resend's sandbox address always "delivers" without actually emailing
-  // anyone (https://resend.com/docs/dashboard/emails/send-test-emails).
-  // Skipped: requires a valid RESEND_API_KEY (currently 401s), see email test skip.
-  it.skip("emails the admin with the submitted name, email, and message", async () => {
+  // Goes through the mocked Resend client (test/setup/mock-email.ts) — never
+  // hits the network, so this doesn't depend on a real RESEND_API_KEY.
+  it("emails the admin with the submitted name, email, and message", async () => {
     const result = await contactAction({
       name: "Jane Doe",
       email: "delivered@resend.dev",
