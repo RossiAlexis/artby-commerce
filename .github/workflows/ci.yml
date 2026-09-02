@@ -38,6 +38,13 @@ jobs:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
           NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
       - run: pnpm build
+        env:
+          # Dummy values: lib/email/client.ts reads these at import time, and
+          # Next.js collects page data (importing route/action modules) for
+          # pages like /cuenta and /cuenta/pedidos/[id] during build.
+          RESEND_API_KEY: "re_ci_placeholder"
+          EMAIL_FROM: "ci@example.com"
+          ADMIN_EMAIL: "admin@example.com"
       - name: Delete ephemeral Neon branch
         if: always()
         run: pnpm exec tsx scripts/ci/teardown-build-db.ts
@@ -65,3 +72,6 @@ jobs:
           # tests that would actually call Resend are skipped in CI.
           RESEND_API_KEY: "re_ci_placeholder"
           EMAIL_FROM: "ci@example.com"
+          # checkoutCart's admin notification calls requireEnv("ADMIN_EMAIL")
+          # even though the Resend call itself is skipped/fails in CI.
+          ADMIN_EMAIL: "admin@example.com"
