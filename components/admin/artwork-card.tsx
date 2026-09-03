@@ -30,7 +30,7 @@ export function ArtworkCard({ artwork }: { artwork: AdminArtworkListItem }) {
         )}
         {artwork.sold && (
           <>
-            <div className="absolute inset-0 bg-[#d9d9d9]/70" />
+            <div className="absolute inset-0 bg-[#D9D9D9B2] backdrop-blur-sm" />
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[11px] font-medium tracking-wide text-white">
                 VENDIDA

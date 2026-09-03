@@ -212,6 +212,14 @@ export const orders = pgTable("orders", {
   giftMessage: text("gift_message"),
   totalCents: integer("total_cents").notNull(),
   currency: text("currency").notNull().default("USD"),
+  // "paid" -> "shipped" -> "delivered", advanced one step at a time from the
+  // admin Pedidos list/detail views.
+  status: text("status", { enum: ["paid", "shipped", "delivered"] })
+    .notNull()
+    .default("paid"),
+  // Only offered once status is "delivered" — keeps the active list short
+  // while preserving history (see admin Pedidos empty-state copy).
+  archived: boolean("archived").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

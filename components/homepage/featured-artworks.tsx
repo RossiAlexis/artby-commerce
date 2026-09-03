@@ -43,9 +43,14 @@ export function FeaturedArtworks({
                   />
                 )}
                 {artwork.sold && (
-                  <span className="absolute top-2 left-2 rounded-full bg-[#1C1917] px-2.5 py-1 text-[10px] leading-4 font-medium tracking-wide text-[#F3EAE0] uppercase">
-                    Vendida
-                  </span>
+                  <>
+                    <div className="absolute inset-0 bg-[#D9D9D9B2] backdrop-blur-sm" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[11px] font-medium tracking-wide text-white">
+                        VENDIDA
+                      </span>
+                    </div>
+                  </>
                 )}
               </div>
               <div className="space-y-1 px-1.5 py-3">

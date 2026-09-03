@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { OrderDetailSections } from "@/components/admin/order-detail-content";
+import { OrderStatusAction } from "@/components/admin/order-status-action";
+import { OrderStatusBadge } from "@/components/admin/order-status-badge";
 import { BottomSheetContent } from "@/components/ui/bottom-sheet-content";
 import { Sheet, SheetTitle } from "@/components/ui/sheet";
 import type { AdminOrderListItem } from "@/lib/db/orders-admin";
@@ -15,31 +17,43 @@ export function OrderDetailSheet({ orders }: { orders: AdminOrderListItem[] }) {
     <>
       <div className="flex flex-col gap-3 sm:hidden">
         {orders.map((order) => (
-          <button
+          <div
             key={order.id}
-            type="button"
-            onClick={() => setSelectedId(order.id)}
-            className="flex flex-col gap-1 rounded-lg bg-white p-4 text-left"
+            className="rounded-lg border border-[#e2d8ce] bg-white p-4"
           >
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-[15px] font-semibold text-[#1c1917]">
+            <button
+              type="button"
+              onClick={() => setSelectedId(order.id)}
+              className="flex w-full flex-col gap-1 text-left"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-[15px] font-semibold text-[#1c1917]">
+                  {`#${String(order.id).padStart(3, "0")} · ${order.items
+                    .map((item) => item.artwork.title)
+                    .join(", ")}`}
+                </p>
+                <OrderStatusBadge status={order.status} />
+              </div>
+              <p className="text-[13px] text-[#7c756f]">
                 {order.customerName}
               </p>
-              <p className="text-[13px] font-medium whitespace-nowrap text-[#1c1917]">
-                {formatPrice(order.totalCents, order.currency)}
+              <p className="text-[13px] text-[#7c756f]">
+                {formatPrice(order.totalCents, order.currency)} ·{" "}
+                {formatDate(order.createdAt, { dateStyle: "medium" })}
               </p>
-            </div>
-            <p className="text-[13px] text-[#7c756f]">{order.customerEmail}</p>
-            <p className="text-[13px] text-[#7c756f]">
-              {order.items.map((item) => item.artwork.title).join(", ")}
-            </p>
-            <p className="text-[13px] text-[#7c756f]">
-              {formatDate(order.createdAt, {
-                dateStyle: "medium",
-                timeStyle: "short",
-              })}
-            </p>
-          </button>
+            </button>
+            {!order.archived && (
+              <OrderStatusAction
+                orderId={order.id}
+                status={order.status}
+                className={
+                  order.status === "delivered"
+                    ? "mt-3 p-0 text-[13px]"
+                    : "mt-3 w-full py-3 text-[15px]"
+                }
+              />
+            )}
+          </div>
         ))}
       </div>
 

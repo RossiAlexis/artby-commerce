@@ -57,7 +57,7 @@ export default async function ArtworkDetailPage(props: {
     <div className={cn("px-5 pt-12", !hasRelatedArtworks && "pb-12")}>
       <Link
         href="/galeria"
-        className="font-heading mb-8 flex items-center gap-4 text-2xl"
+        className="font-heading mb-8 inline-flex w-fit items-center gap-4 text-2xl"
       >
         <ArrowBack />
         {"Galería"}
