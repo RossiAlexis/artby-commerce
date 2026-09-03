@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OrderDetailSections } from "@/components/admin/order-detail-content";
+import { OrderStatusAction } from "@/components/admin/order-status-action";
+import { OrderStatusBadge } from "@/components/admin/order-status-badge";
 import { getAdminOrderById } from "@/lib/db/orders-admin";
 import { formatDate, formatPrice } from "@/lib/utils";
 
@@ -28,9 +30,12 @@ export default async function AdminOrderDetailPage(props: {
       </Link>
 
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <h1 className="font-heading text-xl text-[#1c1917]">
-          Pedido #{order.id}
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="font-heading text-xl text-[#1c1917]">
+            Pedido #{order.id}
+          </h1>
+          <OrderStatusBadge status={order.status} />
+        </div>
         <p className="text-lg font-semibold text-[#1c1917]">
           {formatPrice(order.totalCents, order.currency)}
         </p>
@@ -38,6 +43,11 @@ export default async function AdminOrderDetailPage(props: {
       <p className="mt-1 text-sm text-[#7c756f]">
         {formatDate(order.createdAt, { dateStyle: "long", timeStyle: "short" })}
       </p>
+      {!order.archived && (
+        <div className="mt-4">
+          <OrderStatusAction orderId={order.id} status={order.status} />
+        </div>
+      )}
 
       <div className="mt-8 flex flex-col gap-6">
         <OrderDetailSections order={order} />

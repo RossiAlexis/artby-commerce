@@ -78,6 +78,13 @@
       "when": 1787697412469,
       "tag": "0010_supreme_mole_man",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1788473587855,
+      "tag": "0011_cold_alice",
+      "breakpoints": true
     }
   ]
 }

@@ -37,7 +37,7 @@ test("admin can view the Orders list and open a single Order's detail", async ({
   await expect(row.getByText(title)).toBeVisible();
   await expect(row.getByText(amount)).toBeVisible();
 
-  await row.getByRole("link", { name: "Ver detalle" }).click();
+  await row.getByRole("link", { name: /^#\d+$/ }).click();
   await page.waitForURL(/\/admin\/orders\/\d+$/);
 
   await expect(page.getByText(customerName)).toBeVisible();
