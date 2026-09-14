@@ -32,7 +32,7 @@ export function ArtworkCard({ artwork }: { artwork: AdminArtworkListItem }) {
           <>
             <div className="absolute inset-0 bg-[#D9D9D9B2] backdrop-blur-sm" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[11px] font-medium tracking-wide text-white">
+              <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[14px] font-medium tracking-wide text-white">
                 VENDIDA
               </span>
             </div>
@@ -46,7 +46,7 @@ export function ArtworkCard({ artwork }: { artwork: AdminArtworkListItem }) {
           </p>
           <span
             className={cn(
-              "inline-flex h-[22px] shrink-0 items-center rounded-[4px] px-2 text-[11px] font-medium whitespace-nowrap",
+              "inline-flex h-[22px] shrink-0 items-center rounded-[4px] px-2 text-[14px] font-medium whitespace-nowrap",
               artwork.sold
                 ? "bg-[#f0ebe3] text-[#57514b]"
                 : "bg-[#e6f0e9] text-[#4d5e51]",

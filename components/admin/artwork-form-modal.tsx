@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { AdminArtworkListItem } from "@/lib/db/artworks-admin";
 
 const fieldClass =
-  "h-10 rounded-[4px] border border-[#e2d8ce] px-3 text-[14px] text-[#1c1917] outline-none focus:border-primary";
+  "h-10 rounded-[4px] border border-[#e2d8ce] px-3 text-[16px] text-[#1c1917] outline-none focus:border-primary";
 
 type Props =
   | {
@@ -204,7 +204,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
                   required
                   className={`${fieldClass} w-[262px]`}
                 />
-                <p className="text-[11px] text-[#7c756f]">
+                <p className="text-[14px] text-[#7c756f]">
                   Ej: Acrílico sobre tela, Carbón sobre papel
                 </p>
               </div>
@@ -230,7 +230,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
               <p className="text-[13px] font-medium text-[#1c1917]">
                 Dimensiones
               </p>
-              <p className="text-[11px] text-[#7c756f]">
+              <p className="text-[14px] text-[#7c756f]">
                 Ancho × alto, en centímetros
               </p>
               <div className="flex items-center gap-3">
@@ -251,7 +251,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
                     value && setDimensionUnit(value === "in" ? "in" : "cm")
                   }
                 >
-                  <SelectTrigger className="w-[75px] rounded-[4px] border-[#e2d8ce] bg-white px-3 text-[14px] font-medium text-[#1c1917] data-[size=default]:h-10">
+                  <SelectTrigger className="w-[75px] rounded-[4px] border-[#e2d8ce] bg-white px-3 text-[16px] font-medium text-[#1c1917] data-[size=default]:h-10">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -307,7 +307,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
                   }
                   placeholder={mode === "create" ? "0.00" : undefined}
                   required
-                  className="w-full text-[14px] text-[#1c1917] outline-none"
+                  className="w-full text-[16px] text-[#1c1917] outline-none"
                 />
               </div>
             </div>
@@ -319,7 +319,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
               >
                 Descripción
               </label>
-              <p className="text-[11px] text-[#7c756f]">
+              <p className="text-[14px] text-[#7c756f]">
                 La historia de la obra. Se muestra en la ficha pública.
               </p>
               <Textarea
@@ -370,7 +370,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
               render={
                 <button
                   type="button"
-                  className="text-[14px] text-[#7c756f] hover:text-[#1c1917]"
+                  className="text-[16px] text-[#7c756f] hover:text-[#1c1917]"
                 />
               }
             >
@@ -379,7 +379,7 @@ export function ArtworkFormModal({ mode, artwork, open, onOpenChange }: Props) {
             <Button
               type="submit"
               disabled={isPending}
-              className="bg-primary hover:bg-primary-hover h-[42px] rounded-[8px] px-6 text-[14px] font-medium text-white"
+              className="bg-primary hover:bg-primary-hover h-[42px] rounded-[8px] px-6 text-[16px] font-medium text-white"
             >
               {mode === "create" ? "Guardar obra" : "Guardar cambios"}
             </Button>
@@ -408,7 +408,7 @@ function DimensionField({
         min="0"
         defaultValue={defaultValue}
         required
-        className="w-16 text-[14px] text-[#1c1917] outline-none"
+        className="w-16 text-[16px] text-[#1c1917] outline-none"
       />
       <span className="text-[12px] text-[#7c756f]">{unitLabel}</span>
     </div>
@@ -434,7 +434,7 @@ function ToggleRow({
         <label htmlFor={id} className="text-[13px] font-medium text-[#1c1917]">
           {label}
         </label>
-        <p className="text-[11px] text-[#7c756f]">{hint}</p>
+        <p className="text-[14px] text-[#7c756f]">{hint}</p>
       </div>
       <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} />
     </div>

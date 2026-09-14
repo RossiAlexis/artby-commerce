@@ -13,7 +13,7 @@ export default async function AdminSiteSettingsPage() {
         {settings ? (
           <SiteSettingsForm settings={settings} />
         ) : (
-          <p className="text-sm text-[#7c756f]">
+          <p className="text-base text-[#7c756f]">
             No hay configuración del sitio todavía — sembrá la base de datos
             antes de editar esta página.
           </p>

@@ -61,7 +61,7 @@ export function OrderStatusAction({
       onClick={handleClick}
       disabled={isPending}
       className={cn(
-        "rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors disabled:opacity-50",
+        "rounded-md px-4 py-2 text-base font-medium whitespace-nowrap transition-colors disabled:opacity-50",
         VARIANT_CLASS[variantForStatus(status)],
         className,
       )}

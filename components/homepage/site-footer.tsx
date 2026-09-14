@@ -8,10 +8,9 @@ export function SiteFooter() {
           Art by Vero Miller
         </span>
         <nav className="text-muted-ink flex items-center justify-center gap-6 text-[0.8125rem] md:flex-wrap">
-          <a href="#">Galería</a>
-          <a href="#">Sobre</a>
+          <Link href="/galeria">Galería</Link>
+          <Link href="/#sobre-vero">Sobre</Link>
           <Link href="/contacto">Contacto</Link>
-          <a href="#">Privacidad</a>
         </nav>
         <span className="text-[0.75rem] text-[#4d4d4d]">
           © {new Date().getFullYear()} Art by Vero Miller

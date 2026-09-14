@@ -170,7 +170,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
         </Field>
       </section>
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p className="text-destructive text-base">{error}</p>}
 
       <Button
         type="submit"
@@ -186,7 +186,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <p className="text-primary text-[11px] font-semibold tracking-[1.2px] uppercase">
+      <p className="text-primary text-[14px] font-semibold tracking-[1.2px] uppercase">
         {children}
       </p>
       <div className="h-px w-full bg-[#e2d8ce]" />

@@ -66,24 +66,24 @@ export function OrderDetailSections({
   return (
     <>
       <div className="rounded-lg bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#1c1917]">Cliente</h2>
-        <p className="mt-2 text-sm text-[#1c1917]">{order.customerName}</p>
-        <p className="text-sm text-[#7c756f]">{order.customerEmail}</p>
+        <h2 className="text-base font-semibold text-[#1c1917]">Cliente</h2>
+        <p className="mt-2 text-base text-[#1c1917]">{order.customerName}</p>
+        <p className="text-base text-[#7c756f]">{order.customerEmail}</p>
       </div>
 
       <div className="rounded-lg bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#1c1917]">Envío</h2>
-        <p className="mt-2 text-sm text-[#1c1917]">
+        <h2 className="text-base font-semibold text-[#1c1917]">Envío</h2>
+        <p className="mt-2 text-base text-[#1c1917]">
           {order.shippingAddress}, {order.shippingCity}, {order.shippingCountry}
         </p>
         {order.isGift && (
           <div className="mt-3 border-t border-[#e2d8ce] pt-3">
-            <p className="text-sm text-[#1c1917]">
+            <p className="text-base text-[#1c1917]">
               Es un regalo para{" "}
               <span className="font-medium">{order.giftRecipientName}</span>
             </p>
             {order.giftMessage && (
-              <p className="mt-1 text-sm text-[#7c756f]">
+              <p className="mt-1 text-base text-[#7c756f]">
                 {`"${order.giftMessage}"`}
               </p>
             )}
@@ -92,14 +92,14 @@ export function OrderDetailSections({
       </div>
 
       <div className="rounded-lg bg-white p-6">
-        <h2 className="text-sm font-semibold text-[#1c1917]">
+        <h2 className="text-base font-semibold text-[#1c1917]">
           Obra(s) incluidas
         </h2>
         <ul className="mt-4 divide-y divide-[#e2d8ce]">
           {order.items.map((item) => (
             <li
               key={item.id}
-              className="flex items-center justify-between gap-4 py-3 text-sm first:pt-0 last:pb-0"
+              className="flex items-center justify-between gap-4 py-3 text-base first:pt-0 last:pb-0"
             >
               <span className="text-[#1c1917]">{item.artwork.title}</span>
               <span className="text-[#7c756f]">

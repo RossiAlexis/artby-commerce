@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { getFeaturedArtworks } from "@/lib/db/artworks";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 type FeaturedArtwork = Awaited<ReturnType<typeof getFeaturedArtworks>>[number];
 
@@ -38,19 +38,19 @@ export function FeaturedArtworks({
                     src={heroPhoto.url}
                     alt={artwork.title}
                     fill
-                    className="object-cover"
+                    className={cn(
+                      "object-cover",
+                      artwork.sold && "opacity-50",
+                    )}
                     sizes="(min-width: 768px) 25vw, 50vw"
                   />
                 )}
                 {artwork.sold && (
-                  <>
-                    <div className="absolute inset-0 bg-[#D9D9D9B2] backdrop-blur-sm" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[11px] font-medium tracking-wide text-white">
-                        VENDIDA
-                      </span>
-                    </div>
-                  </>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[11px] font-medium tracking-wide text-white">
+                      VENDIDA
+                    </span>
+                  </div>
                 )}
               </div>
               <div className="space-y-1 px-1.5 py-3">
