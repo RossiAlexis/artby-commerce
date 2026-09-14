@@ -97,7 +97,7 @@ export function ArtworkPhotoGrid({
       <p className="text-[13px] font-medium text-[#1c1917]">
         Imagen de la obra
       </p>
-      <p className="mt-1 text-[11px] text-[#7c756f]">
+      <p className="mt-1 text-[14px] text-[#7c756f]">
         JPG o PNG. Mínimo 600 × 600 px. La primera foto es la portada — arrastrá
         para reordenar.
       </p>
@@ -148,7 +148,7 @@ export function ArtworkPhotoGrid({
         className="hidden"
         onChange={handleFileChange}
       />
-      {error && <p className="text-destructive mt-2 text-[11px]">{error}</p>}
+      {error && <p className="text-destructive mt-2 text-[14px]">{error}</p>}
     </div>
   );
 }

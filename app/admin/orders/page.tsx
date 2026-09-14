@@ -52,7 +52,7 @@ export default async function AdminOrdersPage(props: {
       </Tabs>
       <div className="px-10 py-9">
         {orders.length === 0 ? (
-          <p className="text-sm text-[#7c756f]">
+          <p className="text-base text-[#7c756f]">
             {filter === "archived"
               ? "Todavía no hay pedidos archivados."
               : "Todavía no hay pedidos activos."}

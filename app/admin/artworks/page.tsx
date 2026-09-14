@@ -50,7 +50,7 @@ export default async function AdminArtworksPage(props: {
                 : `/admin/artworks?status=${tab.value}`
             }
             className={cn(
-              "border-b-2 pb-2.5 text-sm whitespace-nowrap",
+              "border-b-2 pb-2.5 text-base whitespace-nowrap",
               filter === tab.value
                 ? "border-primary text-primary font-medium"
                 : "border-transparent text-[#7c756f]",
@@ -66,7 +66,7 @@ export default async function AdminArtworksPage(props: {
         ))}
         {filter !== "sold" && <ArtworkCreateButton variant="tile" />}
         {visibleArtworks.length === 0 && (
-          <p className="col-span-full text-sm text-[#7c756f]">
+          <p className="col-span-full text-base text-[#7c756f]">
             No hay obras en esta categoría.
           </p>
         )}

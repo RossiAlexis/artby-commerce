@@ -35,14 +35,14 @@ export function AdminMobileNav({
                 key={item.label}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="text-foreground border-b border-[#eee] py-3 text-sm"
+                className="text-foreground border-b border-[#eee] py-3 text-base"
               >
                 {item.label}
               </Link>
             ) : (
               <span
                 key={item.label}
-                className="text-muted-foreground border-b border-[#eee] py-3 text-sm"
+                className="text-muted-foreground border-b border-[#eee] py-3 text-base"
               >
                 {item.label}
               </span>
@@ -52,7 +52,7 @@ export function AdminMobileNav({
         <form action={onSignOut} className="px-4 py-3">
           <button
             type="submit"
-            className="text-muted-foreground hover:text-foreground text-sm hover:underline"
+            className="text-muted-foreground hover:text-foreground text-base hover:underline"
           >
             Cerrar sesión
           </button>

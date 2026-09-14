@@ -98,7 +98,7 @@ export function DeleteArtworkButton({
             render={
               <button
                 type="button"
-                className="rounded-[6px] border border-[#e0ddd6] px-[18px] py-2.5 text-[14px] font-medium text-[#1c1917] hover:bg-[#f5f2ef]"
+                className="rounded-[6px] border border-[#e0ddd6] px-[18px] py-2.5 text-[16px] font-medium text-[#1c1917] hover:bg-[#f5f2ef]"
               />
             }
           >
@@ -109,7 +109,7 @@ export function DeleteArtworkButton({
               type="button"
               onClick={handleHideInstead}
               disabled={isPending}
-              className="bg-primary hover:bg-primary-hover rounded-[8px] px-[18px] py-2.5 text-[14px] font-medium text-white disabled:opacity-50"
+              className="bg-primary hover:bg-primary-hover rounded-[8px] px-[18px] py-2.5 text-[16px] font-medium text-white disabled:opacity-50"
             >
               Ocultar en su lugar
             </button>
@@ -118,7 +118,7 @@ export function DeleteArtworkButton({
               type="button"
               onClick={handleDelete}
               disabled={isPending}
-              className="bg-primary hover:bg-primary-hover rounded-[8px] px-[18px] py-2.5 text-[14px] font-medium text-white disabled:opacity-50"
+              className="bg-primary hover:bg-primary-hover rounded-[8px] px-[18px] py-2.5 text-[16px] font-medium text-white disabled:opacity-50"
             >
               Sí, eliminar
             </button>

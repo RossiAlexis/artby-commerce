@@ -13,9 +13,9 @@ export default async function ContactoPage() {
   const settings = await getSiteSettings();
 
   return (
-    <main>
+    <main className="flex min-h-full flex-1 flex-col">
       <SiteHeader />
-      <div className="flex flex-col gap-12 px-6 py-14 md:px-10 lg:flex-row lg:gap-20 lg:px-30 lg:py-16">
+      <div className="flex flex-1 flex-col gap-12 px-6 py-14 md:px-10 lg:flex-row lg:gap-20 lg:px-30 lg:py-16">
         <ContactForm />
         <div className="lg:pt-[4.375rem]">
           <DirectContactCard

@@ -24,7 +24,7 @@ export default async function AdminOrderDetailPage(props: {
     <div className="px-6 py-8 md:px-10">
       <Link
         href="/admin/orders"
-        className="text-primary mb-6 inline-block text-sm hover:underline"
+        className="text-primary mb-6 inline-block text-base hover:underline"
       >
         ← Pedidos
       </Link>
@@ -40,7 +40,7 @@ export default async function AdminOrderDetailPage(props: {
           {formatPrice(order.totalCents, order.currency)}
         </p>
       </div>
-      <p className="mt-1 text-sm text-[#7c756f]">
+      <p className="mt-1 text-base text-[#7c756f]">
         {formatDate(order.createdAt, { dateStyle: "long", timeStyle: "short" })}
       </p>
       {!order.archived && (

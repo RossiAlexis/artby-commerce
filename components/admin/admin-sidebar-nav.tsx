@@ -21,7 +21,7 @@ export function AdminSidebarNav() {
           return (
             <span
               key={item.label}
-              className="rounded-md px-3 py-2 text-sm text-[#fdf9f4]/50"
+              className="rounded-md px-3 py-2 text-base text-[#fdf9f4]/50"
             >
               {item.label}
             </span>
@@ -35,7 +35,7 @@ export function AdminSidebarNav() {
             key={item.label}
             href={item.href}
             className={cn(
-              "relative rounded-md px-3 py-2 text-sm text-[#fdf9f4]",
+              "relative rounded-md px-3 py-2 text-base text-[#fdf9f4]",
               isActive
                 ? "bg-white/[0.08] font-medium"
                 : "font-normal hover:bg-white/5",
