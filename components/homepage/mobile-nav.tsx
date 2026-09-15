@@ -1,8 +1,8 @@
 "use client";
 
 import { Menu } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import { SiteNav } from "@/components/homepage/site-nav";
 import {
   Sheet,
   SheetContent,
@@ -29,16 +29,12 @@ export function MobileNav({ links }: { links: NavLink[] }) {
           <SheetTitle>Menú</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col px-4">
-          {links.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="text-foreground border-b border-[#eee] py-3 text-sm"
-            >
-              {link.label}
-            </Link>
-          ))}
+          <SiteNav
+            links={links}
+            linkClassName="text-foreground border-b border-[#eee] py-3 text-sm"
+            activeLinkClassName="text-primary font-medium"
+            onNavigate={() => setOpen(false)}
+          />
         </nav>
         <div className="text-muted-foreground px-4 py-3 text-sm">
           USD &nbsp;·&nbsp; ES · EN

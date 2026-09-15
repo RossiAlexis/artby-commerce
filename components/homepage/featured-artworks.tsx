@@ -17,7 +17,7 @@ export function FeaturedArtworks({
           Obras disponibles
         </span>
         <Link
-          href="/galeria"
+          href="/galeria?status=all"
           className="text-muted-ink hover:text-foreground text-[0.875rem]"
         >
           Ver todas →

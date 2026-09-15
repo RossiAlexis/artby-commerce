@@ -163,7 +163,7 @@ a {
   bottom: -0.4rem;
   left: 50%;
   height: 2px;
-  background: #688329;
+  background: var(--primary);
   content: "";
   transition:
     right 180ms ease,

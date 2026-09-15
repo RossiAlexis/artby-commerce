@@ -1,3 +1,4 @@
+import { AboutLink } from "@/components/homepage/about-link";
 import Link from "next/link";
 
 export function SiteFooter() {
@@ -9,7 +10,7 @@ export function SiteFooter() {
         </span>
         <nav className="text-muted-ink flex items-center justify-center gap-6 text-[0.8125rem] md:flex-wrap">
           <Link href="/galeria">Galería</Link>
-          <Link href="/#sobre-vero">Sobre</Link>
+          <AboutLink>Sobre</AboutLink>
           <Link href="/contacto">Contacto</Link>
         </nav>
         <span className="text-[0.75rem] text-[#4d4d4d]">

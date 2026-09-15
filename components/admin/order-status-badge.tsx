@@ -1,7 +1,7 @@
 import type { OrderStatus } from "@/lib/db/orders-admin";
 import { cn } from "@/lib/utils";
 
-const STATUS_LABEL: Record<OrderStatus, string> = {
+export const STATUS_LABEL: Record<OrderStatus, string> = {
   paid: "Pagado",
   shipped: "Enviado",
   delivered: "Entregado",
