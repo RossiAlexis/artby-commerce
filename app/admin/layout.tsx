@@ -2,6 +2,7 @@ import Link from "next/link";
 import { signOut } from "@/auth";
 import { AdminMobileNav } from "@/components/admin/admin-mobile-nav";
 import { AdminSidebarNav } from "@/components/admin/admin-sidebar-nav";
+import { Toaster } from "@/components/ui/sonner";
 import { requireAdminPage } from "@/lib/auth/require-admin";
 
 export default async function AdminLayout({
@@ -46,6 +47,7 @@ export default async function AdminLayout({
         </form>
       </aside>
       <main className="min-w-0 flex-1">{children}</main>
+      <Toaster richColors position="top-right" />
     </div>
   );
 }

@@ -26,17 +26,21 @@ export function ArtworkCard({ artwork }: { artwork: AdminArtworkListItem }) {
       <div className="relative h-[185px] w-full bg-[#d9d7d5]">
         {photo && (
           // eslint-disable-next-line @next/next/no-img-element -- admin preview of an already-uploaded Blob URL, not worth next/image's optimization pipeline
-          <img src={photo.url} alt="" className="h-full w-full object-cover" />
+          <img
+            src={photo.url}
+            alt=""
+            className={cn(
+              "h-full w-full object-cover",
+              artwork.sold && "opacity-50",
+            )}
+          />
         )}
         {artwork.sold && (
-          <>
-            <div className="absolute inset-0 bg-[#D9D9D9B2] backdrop-blur-sm" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[14px] font-medium tracking-wide text-white">
-                VENDIDA
-              </span>
-            </div>
-          </>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="bg-primary rounded-[4px] px-3 py-1.5 text-[14px] font-medium tracking-wide text-white">
+              VENDIDA
+            </span>
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-1 p-4">

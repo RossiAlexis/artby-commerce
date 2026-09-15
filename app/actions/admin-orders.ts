@@ -9,7 +9,7 @@ export async function advanceOrderStatusAction(orderId: number) {
   if (!order) return { success: false as const, error: "Pedido no encontrado." };
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
-  return { success: true as const };
+  return { success: true as const, status: order.status };
 }
 
 export async function archiveOrderAction(orderId: number) {
@@ -18,5 +18,5 @@ export async function archiveOrderAction(orderId: number) {
   if (!order) return { success: false as const, error: "Pedido no encontrado." };
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
-  return { success: true as const };
+  return { success: true as const, archived: true };
 }

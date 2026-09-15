@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { toast } from "sonner";
 import {
   advanceOrderStatusAction,
   archiveOrderAction,
 } from "@/app/actions/admin-orders";
+import { STATUS_LABEL } from "@/components/admin/order-status-badge";
 import type { OrderStatus } from "@/lib/db/orders-admin";
 import { cn } from "@/lib/utils";
 
@@ -46,11 +48,21 @@ export function OrderStatusAction({
 
   function handleClick() {
     startTransition(async () => {
-      if (status === "delivered") {
-        await archiveOrderAction(orderId);
-      } else {
-        await advanceOrderStatusAction(orderId);
+      const result =
+        status === "delivered"
+          ? await archiveOrderAction(orderId)
+          : await advanceOrderStatusAction(orderId);
+
+      if (!result.success) {
+        toast.error(result.error);
+        return;
       }
+
+      toast.success(
+        "archived" in result
+          ? "Pedido archivado."
+          : `Pedido movido a "${STATUS_LABEL[result.status]}".`,
+      );
       router.refresh();
     });
   }

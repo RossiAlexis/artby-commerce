@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { MobileNav } from "@/components/homepage/mobile-nav";
+import { SiteNav } from "@/components/homepage/site-nav";
 import { getSiteSettings } from "@/lib/db/site-settings";
 
 const NAV_LINKS = [
@@ -43,11 +44,7 @@ export async function SiteHeader() {
           Art by Vero Miller
         </Link>
         <nav className="text-foreground hidden flex-1 items-center justify-end gap-7 text-[0.8125rem] md:flex">
-          {links.map((link) => (
-            <Link key={link.label} href={link.href} className="nav-link">
-              {link.label}
-            </Link>
-          ))}
+          <SiteNav links={links} linkClassName="nav-link" />
         </nav>
         <div className="flex items-center gap-4">
           <CartDrawer cart={cart} />
