@@ -17,8 +17,8 @@ export function HeroSection({ coverImageUrl, heroTagline }: HeroSectionProps) {
         className="object-cover object-bottom opacity-80"
         sizes="100vw"
       />
-      <div className="absolute bottom-16 left-6 hidden w-[37.5rem] flex-col items-center justify-center gap-3 text-left md:left-30 md:flex">
-        <p className="text-foreground text-center font-serif text-4xl leading-[2.75rem] font-bold">
+      <div className="absolute inset-x-6 top-[22%] flex flex-col items-center gap-3 text-center md:inset-x-auto md:top-auto md:bottom-16 md:left-30 md:w-[37.5rem]">
+        <p className="text-foreground text-center font-serif text-[1.75rem] leading-[2.125rem] font-bold md:text-4xl md:leading-[2.75rem]">
           {heroTagline}
         </p>
         <Link
@@ -26,6 +26,7 @@ export function HeroSection({ coverImageUrl, heroTagline }: HeroSectionProps) {
           className="text-primary hover:text-primary-hover text-lg font-medium"
         >
           Ver galería
+          <span className="md:hidden"> →</span>
         </Link>
       </div>
     </div>

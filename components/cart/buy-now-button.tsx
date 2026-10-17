@@ -37,7 +37,7 @@ export function BuyNowButton({
       <Button
         onClick={handleClick}
         disabled={disabled || isPending}
-        className="h-[42px] w-full"
+        className="h-14 w-full"
       >
         {isPending ? "Procesando…" : "Comprar"}
       </Button>

@@ -59,8 +59,15 @@ test.describe("artwork detail", () => {
 
     await expect(page.getByText("Vendida")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Añadir al carrito" }),
-    ).toBeDisabled();
+      page.getByText("Esta obra ya encontró su hogar."),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Ver otras obras disponibles" }),
+    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "Comprar" })).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Agregar al carrito" }),
+    ).toHaveCount(0);
   });
 });
 
@@ -68,7 +75,7 @@ test("a guest can buy an available Artwork end to end", async ({ page }) => {
   await page.goto("/galeria?status=available");
   await page.getByText(ARTWORK.guestCheckout.title).click();
 
-  await page.getByRole("button", { name: "Añadir al carrito" }).click();
+  await page.getByRole("button", { name: "Agregar al carrito" }).click();
   await expect(page.getByText("Ya está en tu carrito")).toBeVisible();
 
   await page.getByRole("button", { name: /Carrito/ }).click();

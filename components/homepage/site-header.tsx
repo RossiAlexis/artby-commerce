@@ -39,7 +39,7 @@ export async function SiteHeader() {
       <div className="flex items-center justify-between gap-7 border-b border-[#d3d3d3] bg-white px-14 py-[1.125rem]">
         <Link
           href="/"
-          className="text-foreground font-serif text-xl leading-[1.375rem] font-semibold md:text-2xl"
+          className="text-foreground font-serif text-xl leading-[1.375rem] font-medium italic md:text-2xl"
         >
           Art by Vero Miller
         </Link>
@@ -48,8 +48,9 @@ export async function SiteHeader() {
         </nav>
         <div className="flex items-center gap-4">
           <CartDrawer cart={cart} />
-          <span className="text-foreground hidden text-[0.6875rem] whitespace-nowrap md:inline">
-            USD &nbsp;·&nbsp; ES · EN
+          <span className="text-foreground text-[0.6875rem] whitespace-nowrap">
+            <span className="hidden md:inline">USD &nbsp;·&nbsp; </span>
+            ES · EN
           </span>
           <MobileNav links={links} />
         </div>

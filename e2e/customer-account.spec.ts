@@ -51,7 +51,7 @@ test("a signed-in Customer's purchase appears in their Order history", async ({
 
   await page.goto("/galeria?status=available");
   await page.getByText(ARTWORK.customerCheckout.title).click();
-  await page.getByRole("button", { name: "Añadir al carrito" }).click();
+  await page.getByRole("button", { name: "Agregar al carrito" }).click();
 
   await page.getByRole("button", { name: /Carrito/ }).click();
   await page.getByRole("button", { name: "Finalizar compra" }).click();
