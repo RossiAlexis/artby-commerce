@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import { LanguageMarker } from "@/components/homepage/language-marker";
 import { MobileNav } from "@/components/homepage/mobile-nav";
 import { SiteNav } from "@/components/homepage/site-nav";
 import { getSiteSettings } from "@/lib/db/site-settings";
@@ -25,6 +26,7 @@ export async function SiteHeader() {
     ? { href: "/cuenta", label: "Mi cuenta" }
     : { href: "/cuenta/ingresar", label: "Ingresar" };
   const links = [...NAV_LINKS, accountLink];
+  const primaryLanguage = settings?.primaryLanguage === "en" ? "en" : "es";
 
   return (
     <header>
@@ -47,12 +49,21 @@ export async function SiteHeader() {
           <SiteNav links={links} linkClassName="nav-link" />
         </nav>
         <div className="flex items-center gap-4">
-          <CartDrawer cart={cart} />
-          <span className="text-foreground text-[0.6875rem] whitespace-nowrap">
-            <span className="hidden md:inline">USD &nbsp;·&nbsp; </span>
-            ES · EN
-          </span>
-          <MobileNav links={links} />
+          <CartDrawer
+            cart={cart}
+            shipping={
+              settings
+                ? {
+                    shippingOrigin: settings.shippingOrigin,
+                    shippingInsuranceIncluded:
+                      settings.shippingInsuranceIncluded,
+                    freeShippingOver500: settings.freeShippingOver500,
+                  }
+                : null
+            }
+          />
+          <LanguageMarker primaryLanguage={primaryLanguage} />
+          <MobileNav links={links} primaryLanguage={primaryLanguage} />
         </div>
       </div>
     </header>

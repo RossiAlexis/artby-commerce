@@ -81,6 +81,20 @@ export const siteSettings = pgTable("site_settings", {
   postPurchaseMessage: text("post_purchase_message"),
   socialLinks: jsonb("social_links").$type<Record<string, string>>().notNull(),
   contactInfo: jsonb("contact_info").$type<Record<string, string>>().notNull(),
+  // Inbox for new-order notifications and the contact form. Null falls
+  // back to ADMIN_EMAIL so an unset Ajustes field keeps the env recipient.
+  notificationEmail: text("notification_email"),
+  // Where artworks ship from. Checkout shows this as policy copy; there is
+  // still no carrier-rate calculation.
+  shippingOrigin: text("shipping_origin").notNull().default("Ontario, Canadá"),
+  shippingInsuranceIncluded: boolean("shipping_insurance_included")
+    .notNull()
+    .default(true),
+  freeShippingOver500: boolean("free_shipping_over_500")
+    .notNull()
+    .default(false),
+  // "es" | "en". Storefront copy stays Spanish; the header marks this one.
+  primaryLanguage: text("primary_language").notNull().default("es"),
 });
 
 // Auth.js's standard adapter schema (users/accounts/sessions/verification

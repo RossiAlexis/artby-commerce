@@ -2,6 +2,7 @@
 
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { LanguageMarker } from "@/components/homepage/language-marker";
 import { SiteNav } from "@/components/homepage/site-nav";
 import {
   Sheet,
@@ -13,7 +14,13 @@ import {
 
 type NavLink = { href: string; label: string };
 
-export function MobileNav({ links }: { links: NavLink[] }) {
+export function MobileNav({
+  links,
+  primaryLanguage,
+}: {
+  links: NavLink[];
+  primaryLanguage: "es" | "en";
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -36,8 +43,11 @@ export function MobileNav({ links }: { links: NavLink[] }) {
             onNavigate={() => setOpen(false)}
           />
         </nav>
-        <div className="text-muted-foreground px-4 py-3 text-sm">
-          USD &nbsp;·&nbsp; ES · EN
+        <div className="px-4 py-3">
+          <LanguageMarker
+            primaryLanguage={primaryLanguage}
+            className="text-sm"
+          />
         </div>
       </SheetContent>
     </Sheet>

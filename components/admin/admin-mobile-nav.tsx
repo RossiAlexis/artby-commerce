@@ -29,25 +29,16 @@ export function AdminMobileNav({
           <SheetTitle>Menú</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col px-4">
-          {ADMIN_NAV_ITEMS.map((item) =>
-            item.href ? (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="text-foreground border-b border-[#eee] py-3 text-base"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span
-                key={item.label}
-                className="text-muted-foreground border-b border-[#eee] py-3 text-base"
-              >
-                {item.label}
-              </span>
-            ),
-          )}
+          {ADMIN_NAV_ITEMS.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="text-foreground border-b border-[#eee] py-3 text-base"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <form action={onSignOut} className="px-4 py-3">
           <button
