@@ -174,16 +174,27 @@ export function CartDrawer({ cart }: { cart: Cart }) {
                       )}
                     </p>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="icon-sm"
-                    className="text-muted-foreground size-6 shrink-0 self-start rounded-full border-[#E2D8CE]"
-                    aria-label={`Quitar ${item.artwork.title} del carrito`}
-                    disabled={isRemoving}
-                    onClick={() => handleRemove(item.artwork.id)}
-                  >
-                    <X className="size-3" aria-hidden />
-                  </Button>
+                  {isMobile ? (
+                    <button
+                      type="button"
+                      className="shrink-0 self-start text-xs text-[#7C756F] disabled:opacity-50"
+                      disabled={isRemoving}
+                      onClick={() => handleRemove(item.artwork.id)}
+                    >
+                      Quitar
+                    </button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="icon-sm"
+                      className="text-muted-foreground size-6 shrink-0 self-start rounded-full border-[#E2D8CE]"
+                      aria-label={`Quitar ${item.artwork.title} del carrito`}
+                      disabled={isRemoving}
+                      onClick={() => handleRemove(item.artwork.id)}
+                    >
+                      <X className="size-3" aria-hidden />
+                    </Button>
+                  )}
                 </div>
               );
             })}

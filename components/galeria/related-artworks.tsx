@@ -9,7 +9,9 @@ export function RelatedArtworks({ artworks }: { artworks: ArtworkListItem[] }) {
   return (
     <section className="mx-[calc(50%-50vw)] mt-16 w-screen bg-[#FCEBE3] py-10">
       <div className="px-5 md:px-10 lg:px-30">
-        <h2 className="font-heading mb-8 text-xl">Otras obras disponibles</h2>
+        <h2 className="mb-8 font-serif text-[1.75rem] leading-[2.75rem] font-medium">
+          Otras obras disponibles
+        </h2>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           {artworks.map((artwork) => {
             const heroPhoto = artwork.photos[0];

@@ -8,7 +8,7 @@ import { ArtworkPhotos } from "@/components/galeria/artwork-photos";
 import { RelatedArtworks } from "@/components/galeria/related-artworks";
 import { Badge } from "@/components/ui/badge";
 import { getArtworkById, getArtworks } from "@/lib/db/artworks";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn, formatDimensions, formatPrice } from "@/lib/utils";
 
 const ArrowBack = () => (
   <svg
@@ -52,84 +52,108 @@ export default async function ArtworkDetailPage(props: {
 
   const isInCart = cart.items.some((item) => item.artworkId === artwork.id);
   const hasRelatedArtworks = relatedArtworks.length > 0;
+  const galleryHref = artwork.sold
+    ? "/galeria?status=sold"
+    : "/galeria?status=available";
+  const galleryLabel = artwork.sold
+    ? "Galería - Vendidas"
+    : "Galería - Disponibles";
 
   return (
     <div className={cn("px-5 pt-12", !hasRelatedArtworks && "pb-12")}>
       <Link
-        href="/galeria"
-        className="font-heading mb-8 inline-flex w-fit items-center gap-4 text-2xl"
+        href={galleryHref}
+        className="mb-8 inline-flex w-fit items-center gap-4 font-serif text-[1.5rem] leading-tight font-medium md:text-[2rem] md:leading-[3.125rem]"
       >
         <ArrowBack />
-        {"Galería"}
+        {galleryLabel}
       </Link>
       <div className="grid gap-10 md:grid-cols-2">
         <ArtworkPhotos photos={artwork.photos} title={artwork.title} />
-        <div className="space-y-6">
-          <div className="flex items-start justify-between gap-4 border-b border-[#E2D8CE] pb-5">
-            <div className="flex flex-col gap-4">
-              <Badge
-                variant={artwork.sold ? "secondary" : "outline"}
-                className={cn(
-                  "h-[28px] w-[100px] rounded-full border-transparent text-[11px] leading-4 font-medium tracking-wide uppercase",
-                  artwork.sold
-                    ? "bg-[#1C1917] text-[#F3EAE0]"
-                    : "bg-[#E6F0E9] text-[#4D5E51]",
-                )}
-              >
-                {artwork.sold ? "Vendida" : "Disponible"}
-              </Badge>
-              <h1 className="text-[22px] font-semibold">{artwork.title}</h1>
-              <span className="font-sans text-[12px] font-normal text-[#7C756F]">
-                {artwork.medium} - {artwork.width} x {artwork.height} -{" "}
-                {artwork.year}
-              </span>
-            </div>
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3 border-b border-[#E2D8CE] pb-5">
+            <Badge
+              variant={artwork.sold ? "secondary" : "outline"}
+              className={cn(
+                "h-[1.75rem] w-[6.25rem] rounded-full border-transparent text-[0.6875rem] leading-4 font-medium tracking-wide uppercase",
+                artwork.sold
+                  ? "bg-[#1C1917] text-[#F3EAE0]"
+                  : "bg-[#E6F0E9] text-[#4D5E51]",
+              )}
+            >
+              {artwork.sold ? "Vendida" : "Disponible"}
+            </Badge>
+            <h1 className="font-serif text-[2.25rem] leading-[3rem] font-medium md:text-[2.5rem] md:leading-[3.5rem]">
+              {artwork.title}
+            </h1>
+            <p className="font-serif text-[1.125rem] leading-[1.875rem] text-[#7C756F] italic">
+              {artwork.medium} · {artwork.width} × {artwork.height}{" "}
+              {artwork.dimensionUnit} · {artwork.year}
+            </p>
           </div>
-          <div className="flex flex-col gap-10 border-b border-[#E2D8CE] pb-5">
-            <p className="text-[22px] font-semibold">
+          <div className="flex flex-col gap-6 border-b border-[#E2D8CE] pb-5">
+            <p
+              className={cn(
+                "font-serif text-[2.5rem] leading-[3.5rem] font-medium md:text-[2.75rem] md:leading-[4rem]",
+                artwork.sold ? "text-[#7C756F]" : "text-[#1C1917]",
+              )}
+            >
               {formatPrice(artwork.priceCents, artwork.currency)}
             </p>
-            <p className="font-sans text-[12px] font-normal whitespace-pre-line">
+            <p className="font-sans text-base leading-relaxed whitespace-pre-line text-[#1C1917]">
               {artwork.description}
             </p>
           </div>
-          <div className="flex flex-col gap-10 border-b border-[#E2D8CE] pb-5">
-            <dl className="flex flex-col gap-8 font-sans text-[12px] font-normal">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Dimensiones</dt>
-                <dd className="text-[#1A1A1A]">
-                  {artwork.width} × {artwork.height} {artwork.dimensionUnit}
-                </dd>
+          <dl className="flex flex-col gap-5 border-b border-[#E2D8CE] pb-5 font-sans text-sm">
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-[#7C756F]">Técnica</dt>
+              <dd className="text-[#1C1917]">{artwork.medium}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-[#7C756F]">Dimensiones</dt>
+              <dd className="text-[#1C1917]">
+                {formatDimensions(
+                  artwork.width,
+                  artwork.height,
+                  artwork.dimensionUnit,
+                )}
+              </dd>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-[#7C756F]">Año</dt>
+              <dd className="text-[#1C1917]">{artwork.year}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-[#7C756F]">Envío</dt>
+              <dd className="text-[#1C1917]">
+                Incluye envío seguro a todo el mundo
+              </dd>
+            </div>
+          </dl>
+          {artwork.sold ? (
+            <div className="flex flex-col gap-4">
+              <p className="font-serif text-[1.125rem] text-[#7C756F] italic">
+                Esta obra ya encontró su hogar.
+              </p>
+              <Link
+                href="/galeria?status=available"
+                className="border-primary text-primary hover:bg-primary/5 inline-flex h-14 w-full items-center justify-center rounded-lg border text-base font-medium"
+              >
+                Ver otras obras disponibles
+              </Link>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <ArtworkOptions />
+              <div className="flex flex-col gap-5">
+                <BuyNowButton artworkId={artwork.id} inCart={isInCart} />
+                <AddToCartButton artworkId={artwork.id} inCart={isInCart} />
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Técnica</dt>
-                <dd className="text-[#1A1A1A]">{artwork.medium}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Año</dt>
-                <dd className="text-[#1A1A1A]">{artwork.year}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-muted-foreground">Envío</dt>
-                <dd className="text-[#1A1A1A]">
-                  Incluye envío seguro a todo el mundo
-                </dd>
-              </div>
-            </dl>
-          </div>
-          {/* <ArtworkOptions /> */}
-          <div className="flex flex-col gap-3">
-            <BuyNowButton
-              artworkId={artwork.id}
-              disabled={artwork.sold}
-              inCart={isInCart}
-            />
-            <AddToCartButton
-              artworkId={artwork.id}
-              disabled={artwork.sold}
-              inCart={isInCart}
-            />
-          </div>
+              <p className="text-center text-xs text-[#7C756F]">
+                Pago seguro vía Stripe
+              </p>
+            </div>
+          )}
         </div>
       </div>
       <RelatedArtworks artworks={relatedArtworks} />

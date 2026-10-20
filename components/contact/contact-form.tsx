@@ -161,7 +161,7 @@ export function ContactForm() {
           <Button
             type="submit"
             disabled={isPending || !isFormValid}
-            className="bg-primary hover:bg-primary/90 h-12 w-full rounded-md px-8 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50 lg:w-fit lg:self-end"
+            className="bg-primary hover:bg-primary/90 h-12 w-full rounded-md px-8 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50 md:w-fit"
           >
             {isPending ? "Enviando…" : "Enviar mensaje"}
           </Button>
