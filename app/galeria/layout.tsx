@@ -7,7 +7,7 @@ export default function GaleriaLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-muted flex min-h-full flex-1 flex-col">
+    <div className="bg-background flex min-h-full flex-1 flex-col">
       <SiteHeader />
       <div className="flex-1 lg:px-30">{children}</div>
       <SiteFooter />

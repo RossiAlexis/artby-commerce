@@ -5,6 +5,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+function formatMeasure(value: number) {
+  return Number.isInteger(value) ? String(value) : String(value);
+}
+
+/** Figma shows centimetres plus a rounded inch equivalent, e.g. "20 × 20 cm (8 × 8 in.)". */
+export function formatDimensions(width: number, height: number, unit: string) {
+  const size = `${formatMeasure(width)} × ${formatMeasure(height)} ${unit}`;
+  if (unit.toLowerCase() !== "cm") return size;
+  const inches = (cm: number) => Math.round(cm / 2.54);
+  return `${size} (${inches(width)} × ${inches(height)} in.)`;
+}
+
 export function formatPrice(priceCents: number, currency: string) {
   const hasCents = priceCents % 100 !== 0;
   return new Intl.NumberFormat("en-US", {

@@ -33,7 +33,7 @@ export default async function GaleriaPage(props: {
     <div className="px-6 py-12 md:px-10">
       <Link
         href="/"
-        className="font-heading mb-8 inline-flex w-fit items-center gap-4 text-2xl"
+        className="mb-8 inline-flex w-fit items-center gap-4 font-serif text-[1.5rem] leading-tight font-medium md:text-[2rem] md:leading-[3.125rem]"
       >
         <ArrowBack />
         {"Galería"}
