@@ -8,13 +8,13 @@ type HeroSectionProps = {
 
 export function HeroSection({ coverImageUrl, heroTagline }: HeroSectionProps) {
   return (
-    <div className="relative h-[36.25rem] w-full overflow-hidden">
+    <div className="relative h-[36.25rem] w-full overflow-hidden bg-background">
       <Image
         src={coverImageUrl}
         alt="Vero Miller pintando"
         fill
         priority
-        className="object-cover object-bottom opacity-80"
+        className="object-contain object-center"
         sizes="100vw"
       />
       <div className="absolute inset-x-6 top-[22%] flex flex-col items-center gap-3 text-center md:inset-x-auto md:top-auto md:bottom-16 md:left-30 md:w-[37.5rem]">
