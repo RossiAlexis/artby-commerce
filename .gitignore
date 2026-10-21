@@ -15,6 +15,8 @@
 /test-results
 /playwright-report
 /blob-report
+/e2e/hero-frame/before-*
+/e2e/hero-frame/check-*
 
 # next.js
 /.next/

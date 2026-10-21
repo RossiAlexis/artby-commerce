@@ -2,7 +2,7 @@
 import z from "zod";
 import { sendEmail } from "@/lib/email/send";
 import { ContactMessageEmail } from "@/lib/email/templates/contact-message";
-import { requireEnv } from "@/lib/env";
+import { getAdminNotificationEmail } from "@/lib/db/site-settings";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1),
@@ -23,7 +23,7 @@ export async function contactAction(
 
   try {
     await sendEmail({
-      to: requireEnv("ADMIN_EMAIL"),
+      to: await getAdminNotificationEmail(),
       subject: `Nuevo mensaje de contacto de ${parsed.data.name}`,
       template: ContactMessageEmail(parsed.data),
     });

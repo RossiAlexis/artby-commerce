@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import z from "zod";
 import { requireAdminAction } from "@/lib/auth/require-admin";
 import { getSiteSettings, updateSiteSettings } from "@/lib/db/site-settings";
+import { limitImageEdge } from "@/lib/images/limit-image-edge";
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -75,11 +76,25 @@ export async function uploadSiteSettingsImageAction(
   const current = await getSiteSettings();
   const columnKey = field === "cover" ? "coverImageUrl" : "aboutImageUrl";
 
+  let stored: Buffer;
+  let contentType: string;
+  try {
+    const limited = await limitImageEdge(
+      Buffer.from(await file.arrayBuffer()),
+      file.type,
+    );
+    stored = limited.bytes;
+    contentType = limited.contentType;
+  } catch {
+    return { success: false, error: "Could not read that image." };
+  }
+
   const blob = await put(
     `site-settings/${field}/${crypto.randomUUID()}`,
-    file,
+    stored,
     {
       access: "public",
+      contentType,
       oidcToken: process.env.VERCEL_OIDC_TOKEN,
       storeId: process.env.BLOB_STORE_ID,
     },

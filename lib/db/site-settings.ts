@@ -1,5 +1,6 @@
 "use server";
 import { desc, eq } from "drizzle-orm";
+import { requireEnv } from "@/lib/env";
 import { db } from "./client";
 import { siteSettings } from "./schema";
 
@@ -26,7 +27,20 @@ export type SiteSettingsUpdate = Partial<{
   postPurchaseMessage: string | null;
   socialLinks: Record<string, string>;
   contactInfo: Record<string, string>;
+  notificationEmail: string | null;
+  shippingOrigin: string;
+  shippingInsuranceIncluded: boolean;
+  freeShippingOver500: boolean;
+  primaryLanguage: string;
 }>;
+
+/** Recipient for order alerts and the contact form. */
+export async function getAdminNotificationEmail() {
+  const settings = await getSiteSettings();
+  const configured = settings?.notificationEmail?.trim();
+  if (configured) return configured;
+  return requireEnv("ADMIN_EMAIL");
+}
 
 /**
  * Always updates the existing Site Settings row by its own id — never

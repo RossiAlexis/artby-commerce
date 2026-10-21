@@ -22,7 +22,14 @@ import {
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import type { Cart } from "@/lib/db/cart";
+import { shippingCheckoutNote } from "@/lib/shop-settings";
 import { cn, formatPrice } from "@/lib/utils";
+
+type ShippingPolicy = {
+  shippingOrigin: string;
+  shippingInsuranceIncluded: boolean;
+  freeShippingOver500: boolean;
+};
 
 const PAYMENT_METHODS = ["Visa", "MC", "Amex", "Apple Pay", "Google Pay"];
 
@@ -47,7 +54,13 @@ function CartIcon({ className }: { className?: string }) {
   );
 }
 
-export function CartDrawer({ cart }: { cart: Cart }) {
+export function CartDrawer({
+  cart,
+  shipping,
+}: {
+  cart: Cart;
+  shipping?: ShippingPolicy | null;
+}) {
   const { open, view, setOpen, setView } = useCartDrawer();
   const [isPending, startTransition] = useTransition();
   const [pendingArtworkId, setPendingArtworkId] = useState<number | null>(null);
@@ -265,6 +278,14 @@ export function CartDrawer({ cart }: { cart: Cart }) {
             >
               Información de envío
             </h3>
+            {shipping && (
+              <p className="text-xs text-[#7C756F]">
+                {shippingCheckoutNote({
+                  ...shipping,
+                  totalCents: cart.totalCents,
+                })}
+              </p>
+            )}
             <div className="space-y-1">
               <Label htmlFor="checkout-name" className="sr-only">
                 Nombre completo

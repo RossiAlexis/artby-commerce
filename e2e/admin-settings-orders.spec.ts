@@ -25,6 +25,24 @@ test("admin edits Mi sitio and the change reflects on the public site", async ({
   await expect(page.getByText(newTagline)).toBeVisible();
 });
 
+test("admin saves Ajustes and the Instagram handle shows on Contacto", async ({
+  page,
+}) => {
+  const handle = `e2eajustes${test.info().workerIndex}`;
+
+  await page.goto("/admin/settings");
+  await expect(page.getByRole("heading", { name: "Ajustes" })).toBeVisible();
+  await page
+    .locator("#notificationEmail")
+    .fill("ajustes-e2e@artbyveromiller.com");
+  await page.locator("#instagramHandle").fill(`@${handle}`);
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(page.getByText("Cambios guardados.")).toBeVisible();
+
+  await page.goto("/contacto");
+  await expect(page.getByRole("link", { name: `@${handle}` })).toBeVisible();
+});
+
 test("admin can view the Orders list and open a single Order's detail", async ({
   page,
 }) => {

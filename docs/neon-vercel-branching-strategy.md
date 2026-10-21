@@ -71,22 +71,18 @@ Key points:
 - Production is only ever touched by the Production deployment, never by a
   preview build.
 
-## 3. Open question: migrations
+## 3. Migrations
 
-Neither integration runs `drizzle-kit migrate` for you — that's still
-something to trigger explicitly. Two common approaches:
+`pnpm build` runs `pnpm db:migrate` before `next build`. Preview builds
+therefore migrate their own `preview/pr-*` branch, and a production deploy
+migrates the production branch. The migration connects to the same database
+as `DATABASE_URL`. A `DIRECT_URL` for a different host is ignored, and the
+pooled host has `-pooler` removed so the migration does not go through the
+pooler.
 
-- Run it as part of the Vercel build command for that environment (e.g.
-  `pnpm db:migrate && next build`), so each preview build migrates its own
-  fresh branch, and the production build migrates the production branch on
-  deploy.
-- Run it as a separate CI step (GitHub Actions) before/alongside the Vercel
-  deploy.
-
-Wiring it into the build command is probably the least-friction option given
-migrations are already run manually via `pnpm db:migrate`, but a botched
-migration in a build step blocks deploys — worth deciding deliberately rather
-than defaulting into it.
+A failed migration fails the deploy. GitHub CI still provisions its own
+ephemeral branch and migrates it before `pnpm build`; the second migrate is
+a no-op.
 
 ## 4. How the existing test harness fits in
 

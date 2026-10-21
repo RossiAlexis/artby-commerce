@@ -1,6 +1,5 @@
 "use server";
 import { and, desc, eq, gt, inArray } from "drizzle-orm";
-import { requireEnv } from "@/lib/env";
 import { sendEmail } from "@/lib/email/send";
 import { OrderConfirmationEmail } from "@/lib/email/templates/order-confirmation";
 import { OrderNotificationEmail } from "@/lib/email/templates/order-notification";
@@ -13,6 +12,7 @@ import {
   orders,
 } from "./schema";
 import { EmptyCartError, ReservationExpiredError } from "./order-errors";
+import { getAdminNotificationEmail } from "./site-settings";
 
 export type CheckoutInput = {
   cartId: string;
@@ -124,6 +124,7 @@ export async function checkoutCart({
   // The Order itself already committed above — a failed confirmation or
   // notification email (e.g. a provider outage) must never turn an
   // otherwise-successful purchase into a checkout error for the Customer.
+  const adminEmail = await getAdminNotificationEmail();
   await Promise.all([
     sendEmail({
       to: order.customerEmail,
@@ -133,7 +134,7 @@ export async function checkoutCart({
       console.error(`Order #${order.id} confirmation email failed:`, error);
     }),
     sendEmail({
-      to: requireEnv("ADMIN_EMAIL"),
+      to: adminEmail,
       subject: `Nueva Orden #${order.id}`,
       template: OrderNotificationEmail({ order }),
     }).catch((error) => {

@@ -8,7 +8,7 @@ export const ADMIN_NAV_ITEMS = [
   { href: "/admin/artworks", label: "Obras" },
   { href: "/admin/site-settings", label: "Mi sitio" },
   { href: "/admin/orders", label: "Pedidos" },
-  { href: null, label: "Ajustes" },
+  { href: "/admin/settings", label: "Ajustes" },
 ] as const;
 
 export function AdminSidebarNav() {
@@ -17,17 +17,6 @@ export function AdminSidebarNav() {
   return (
     <nav className="mt-5 flex flex-col gap-1">
       {ADMIN_NAV_ITEMS.map((item) => {
-        if (!item.href) {
-          return (
-            <span
-              key={item.label}
-              className="rounded-md px-3 py-2 text-base text-[#fdf9f4]/50"
-            >
-              {item.label}
-            </span>
-          );
-        }
-
         const isActive = pathname.startsWith(item.href);
 
         return (

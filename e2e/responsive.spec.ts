@@ -21,13 +21,13 @@ test("admin sidebar collapses into a hamburger menu on mobile", async ({
   await expect(menu.getByRole("link", { name: "Obras" })).toBeVisible();
   await expect(menu.getByRole("link", { name: "Mi sitio" })).toBeVisible();
   await expect(menu.getByRole("link", { name: "Pedidos" })).toBeVisible();
-  await expect(menu.getByText("Ajustes")).toBeVisible();
+  await expect(menu.getByRole("link", { name: "Ajustes" })).toBeVisible();
   await expect(
     menu.getByRole("button", { name: "Cerrar sesión" }),
   ).toBeVisible();
 
-  await page.getByRole("link", { name: "Mi sitio" }).click();
-  await page.waitForURL("**/admin/site-settings");
+  await menu.getByRole("link", { name: "Ajustes" }).click();
+  await page.waitForURL("**/admin/settings");
 });
 
 test("the artwork edit modal renders full-bleed on mobile", async ({

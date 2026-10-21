@@ -70,7 +70,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
         <Field
           id="coverImage"
           label="Imagen del hero"
-          hint="Imagen de fondo de la portada. Recomendado: horizontal, mínimo 1440 × 900 px."
+          hint="La portada usa esta imagen a lo ancho, en proporción 2880 × 680. Horizontal. Si es más grande, se guarda a 2880 px en el lado largo."
         >
           <SiteSettingsImageUpload
             field="cover"
