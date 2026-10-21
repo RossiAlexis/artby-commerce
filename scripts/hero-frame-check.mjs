@@ -4,8 +4,11 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outDir = path.join(root, "e2e/hero-frame");
-const frameHeight = 580;
 const background = "#fdf9f4";
+
+function heroBandHeight(viewportHeight) {
+  return Math.max(viewportHeight - 76, 28 * 16);
+}
 
 const frames = [
   { name: "desktop", width: 1440, height: 900 },
@@ -23,11 +26,11 @@ const covers = [
   },
 ];
 
-function specHtml(imageUrl, width) {
+function specHtml(imageUrl, width, height) {
   return `<!doctype html>
 <html>
   <body style="margin:0;background:${background}">
-    <div id="frame" style="position:relative;width:${width}px;height:${frameHeight}px;overflow:hidden;background:${background}">
+    <div id="frame" style="position:relative;width:${width}px;height:${height}px;overflow:hidden;background:${background}">
       <img id="cover" alt="" src="${imageUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center center" />
     </div>
   </body>
@@ -96,7 +99,7 @@ async function pixelDelta(page, left, right) {
 
 async function referenceShot(page, imageUrl, frame) {
   await page.setViewportSize({ width: frame.width, height: frame.height });
-  await page.setContent(specHtml(imageUrl, frame.width), {
+  await page.setContent(specHtml(imageUrl, frame.width, heroBandHeight(frame.height)), {
     waitUntil: "networkidle",
   });
   await page.locator("#cover").evaluate(
