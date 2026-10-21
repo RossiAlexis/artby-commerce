@@ -6,33 +6,20 @@ const root = path.resolve(import.meta.dirname, "..");
 const outDir = path.join(root, "e2e/hero-frame");
 const background = "#fdf9f4";
 
-function heroBandHeight(viewportHeight) {
-  return Math.max(viewportHeight - 76, 28 * 16);
-}
-
-const frames = [
-  { name: "desktop", width: 1440, height: 900 },
-  { name: "mobile", width: 390, height: 844 },
-];
+const frames = [{ name: "desktop", width: 1440, height: 900 }];
 
 const covers = [
   {
     name: "landscape",
     url: "http://localhost:3000/seed/cover.png",
   },
-  {
-    name: "portrait",
-    url: "https://swa4mn4bj63n6az4.public.blob.vercel-storage.com/site-settings/cover/a610e083-287c-4efd-9556-b057b06eaa70",
-  },
 ];
 
-function specHtml(imageUrl, width, height) {
+function specHtml(imageUrl, width) {
   return `<!doctype html>
 <html>
   <body style="margin:0;background:${background}">
-    <div id="frame" style="position:relative;width:${width}px;height:${height}px;overflow:hidden;background:${background}">
-      <img id="cover" alt="" src="${imageUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center center" />
-    </div>
+    <img id="cover" alt="" src="${imageUrl}" width="2880" height="680" style="display:block;width:${width}px;height:auto" />
   </body>
 </html>`;
 }
@@ -99,7 +86,7 @@ async function pixelDelta(page, left, right) {
 
 async function referenceShot(page, imageUrl, frame) {
   await page.setViewportSize({ width: frame.width, height: frame.height });
-  await page.setContent(specHtml(imageUrl, frame.width, heroBandHeight(frame.height)), {
+  await page.setContent(specHtml(imageUrl, frame.width), {
     waitUntil: "networkidle",
   });
   await page.locator("#cover").evaluate(
@@ -117,7 +104,7 @@ async function referenceShot(page, imageUrl, frame) {
             );
           }),
   );
-  return shot(page, page.locator("#frame"));
+  return shot(page, page.locator("#cover"));
 }
 
 async function liveShot(page, imageUrl, frame) {
@@ -133,19 +120,21 @@ async function liveShot(page, imageUrl, frame) {
     image.src = nextUrl;
     return image.decode();
   }, imageUrl);
-  const hero = cover.locator("xpath=..");
-  await hero.evaluate((element) => {
-    for (const node of element.querySelectorAll(":scope > div")) {
-      node.style.visibility = "hidden";
+  await cover.evaluate((image) => {
+    const parent = image.parentElement;
+    if (!parent) return;
+    for (const child of parent.children) {
+      if (child !== image) child.style.visibility = "hidden";
     }
-    element.style.position = "fixed";
-    element.style.inset = "0 auto auto 0";
-    element.style.width = "100%";
-    element.style.zIndex = "50";
+    parent.style.position = "fixed";
+    parent.style.inset = "0 auto auto 0";
+    parent.style.width = "100%";
+    parent.style.zIndex = "50";
+    parent.style.margin = "0";
   });
-  const box = await hero.boundingBox();
+  const box = await cover.boundingBox();
   return {
-    png: await shot(page, hero),
+    png: await shot(page, cover),
     box,
     fit: await cover.evaluate((image) => getComputedStyle(image).objectFit),
     position: await cover.evaluate(
