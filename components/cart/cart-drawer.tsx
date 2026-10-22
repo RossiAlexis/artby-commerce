@@ -488,15 +488,13 @@ export function CartDrawer({
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger
         ref={triggerRef}
-        className="flex items-center gap-1"
+        className={cn(
+          "flex items-center gap-1",
+          open ? "text-[#C27A5A]" : "text-foreground",
+        )}
         aria-label={`Carrito${cart.items.length > 0 ? ` (${cart.items.length})` : ""}`}
       >
-        <CartIcon
-          className={cn(
-            "size-[26px]",
-            open ? "text-[#C27A5A]" : "text-foreground",
-          )}
-        />
+        <CartIcon className="size-[26px]" />
         <span className={cart.items.length === 0 ? "invisible" : undefined}>
           {cart.items.length}
         </span>

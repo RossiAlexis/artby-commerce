@@ -4,15 +4,18 @@ import Image from "next/image";
 import { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { ArtworkDetail } from "@/lib/db/artworks";
+import { cn } from "@/lib/utils";
 
 type ArtworkPhoto = NonNullable<ArtworkDetail>["photos"][number];
 
 export function ArtworkPhotos({
   photos,
   title,
+  sold = false,
 }: {
   photos: ArtworkPhoto[];
   title: string;
+  sold?: boolean;
 }) {
   const [selectedId, setSelectedId] = useState(String(photos[0]?.id));
   const heroPhoto =
@@ -27,7 +30,7 @@ export function ArtworkPhotos({
             alt={title}
             fill
             priority
-            className="object-cover"
+            className={cn("object-cover", sold && "scale-110 blur-xl")}
             sizes="(min-width: 768px) 50vw, 100vw"
           />
         )}
@@ -49,7 +52,7 @@ export function ArtworkPhotos({
                 src={photo.url}
                 alt=""
                 fill
-                className="object-cover"
+                className={cn("object-cover", sold && "scale-110 blur-xl")}
                 sizes="25vw"
               />
             </ToggleGroupItem>

@@ -18,7 +18,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f5f2ef] md:flex-row">
+    <div className="flex h-screen flex-col overflow-hidden bg-[#f5f2ef] md:flex-row">
       <div className="flex h-14 shrink-0 items-center justify-between bg-[#1c1917] px-5 md:hidden">
         <Link
           href="/admin/artworks"
@@ -28,7 +28,7 @@ export default async function AdminLayout({
         </Link>
         <AdminMobileNav onSignOut={handleSignOut} />
       </div>
-      <aside className="hidden w-60 shrink-0 flex-col bg-[#1c1917] px-7 py-9 md:flex">
+      <aside className="hidden h-full w-60 shrink-0 flex-col overflow-hidden bg-[#1c1917] px-7 py-9 md:flex">
         <Link
           href="/admin/artworks"
           className="font-serif text-xl font-medium text-[#fdf9f4]"
@@ -46,7 +46,7 @@ export default async function AdminLayout({
           </button>
         </form>
       </aside>
-      <main className="min-w-0 flex-1">{children}</main>
+      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">{children}</main>
       <Toaster richColors position="top-right" />
     </div>
   );
