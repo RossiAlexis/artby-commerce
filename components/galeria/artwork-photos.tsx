@@ -30,7 +30,7 @@ export function ArtworkPhotos({
             alt={title}
             fill
             priority
-            className={cn("object-cover", sold && "scale-110 blur-xl")}
+            className={cn("object-cover", sold && "sold-artwork-photo")}
             sizes="(min-width: 768px) 50vw, 100vw"
           />
         )}
@@ -52,7 +52,7 @@ export function ArtworkPhotos({
                 src={photo.url}
                 alt=""
                 fill
-                className={cn("object-cover", sold && "scale-110 blur-xl")}
+                className={cn("object-cover", sold && "sold-artwork-photo")}
                 sizes="25vw"
               />
             </ToggleGroupItem>

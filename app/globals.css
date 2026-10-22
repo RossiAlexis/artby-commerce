@@ -177,6 +177,12 @@ a {
   left: 0;
 }
 
+/* Sold artwork photos fade. The gallery list, the homepage, and the detail
+   page (hero and thumbnails) all use this — the list never blurred the image. */
+.sold-artwork-photo {
+  opacity: 0.5;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
