@@ -40,7 +40,7 @@ export function FeaturedArtworks({
                     fill
                     className={cn(
                       "object-cover",
-                      artwork.sold && "opacity-50",
+                      artwork.sold && "sold-artwork-photo",
                     )}
                     sizes="(min-width: 768px) 25vw, 50vw"
                   />

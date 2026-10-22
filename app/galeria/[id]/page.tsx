@@ -8,7 +8,7 @@ import { ArtworkPhotos } from "@/components/galeria/artwork-photos";
 import { RelatedArtworks } from "@/components/galeria/related-artworks";
 import { Badge } from "@/components/ui/badge";
 import { getArtworkById, getArtworks } from "@/lib/db/artworks";
-import { cn, formatDimensions, formatPrice } from "@/lib/utils";
+import { cn, formatDimensions, formatPriceParts } from "@/lib/utils";
 
 const ArrowBack = () => (
   <svg
@@ -51,6 +51,7 @@ export default async function ArtworkDetailPage(props: {
     .slice(0, 4);
 
   const isInCart = cart.items.some((item) => item.artworkId === artwork.id);
+  const price = formatPriceParts(artwork.priceCents, artwork.currency);
   const hasRelatedArtworks = relatedArtworks.length > 0;
   const galleryHref = artwork.sold
     ? "/galeria?status=sold"
@@ -69,15 +70,19 @@ export default async function ArtworkDetailPage(props: {
         {galleryLabel}
       </Link>
       <div className="grid gap-10 md:grid-cols-2">
-        <ArtworkPhotos photos={artwork.photos} title={artwork.title} />
+        <ArtworkPhotos
+          photos={artwork.photos}
+          title={artwork.title}
+          sold={artwork.sold}
+        />
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-3 border-b border-[#E2D8CE] pb-5">
             <Badge
-              variant={artwork.sold ? "secondary" : "outline"}
+              variant={artwork.sold ? "default" : "outline"}
               className={cn(
                 "h-[1.75rem] w-[6.25rem] rounded-full border-transparent text-[0.6875rem] leading-4 font-medium tracking-wide uppercase",
                 artwork.sold
-                  ? "bg-[#1C1917] text-[#F3EAE0]"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-[#E6F0E9] text-[#4D5E51]",
               )}
             >
@@ -93,12 +98,16 @@ export default async function ArtworkDetailPage(props: {
           </div>
           <div className="flex flex-col gap-6 border-b border-[#E2D8CE] pb-5">
             <p
+              aria-label={
+                price.amount ? `${price.code} ${price.amount}` : price.code
+              }
               className={cn(
-                "font-serif text-[2.5rem] leading-[3.5rem] font-medium md:text-[2.75rem] md:leading-[4rem]",
+                "flex w-fit items-baseline gap-[0.25em] font-serif text-[2.5rem] leading-[3.5rem] font-medium lining-nums md:text-[2.75rem] md:leading-[4rem]",
                 artwork.sold ? "text-[#7C756F]" : "text-[#1C1917]",
               )}
             >
-              {formatPrice(artwork.priceCents, artwork.currency)}
+              <span>{price.code}</span>
+              {price.amount ? <span>{price.amount}</span> : null}
             </p>
             <p className="font-sans text-base leading-relaxed whitespace-pre-line text-[#1C1917]">
               {artwork.description}

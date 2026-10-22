@@ -31,7 +31,7 @@ export function ArtworkCard({ artwork }: { artwork: AdminArtworkListItem }) {
             alt=""
             className={cn(
               "h-full w-full object-cover",
-              artwork.sold && "opacity-50",
+              artwork.sold && "sold-artwork-photo",
             )}
           />
         )}

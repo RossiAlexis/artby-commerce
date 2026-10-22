@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { auth } from "@/auth";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { LanguageMarker } from "@/components/homepage/language-marker";
 import { MobileNav } from "@/components/homepage/mobile-nav";
 import { SiteNav } from "@/components/homepage/site-nav";
 import { getSiteSettings } from "@/lib/db/site-settings";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/galeria", label: "Galería" },
@@ -13,23 +13,16 @@ const NAV_LINKS = [
   { href: "/contacto", label: "Contacto" },
 ];
 
-export async function SiteHeader() {
-  const [cart, settings, session] = await Promise.all([
+export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
+  const [cart, settings] = await Promise.all([
     getCurrentCart(),
     getSiteSettings(),
-    auth(),
   ]);
 
-  // "Mi cuenta" only makes sense once signed in — otherwise the link sends
-  // the Customer to sign in first (see lib/auth/require-customer.ts).
-  const accountLink = session?.user?.id
-    ? { href: "/cuenta", label: "Mi cuenta" }
-    : { href: "/cuenta/ingresar", label: "Ingresar" };
-  const links = [...NAV_LINKS, accountLink];
   const primaryLanguage = settings?.primaryLanguage === "en" ? "en" : "es";
 
   return (
-    <header>
+    <header className={cn(overlay && "relative z-30")}>
       {settings?.announcementBar && (
         <>
           <div className="bg-foreground flex h-9 items-center justify-center text-center text-xs text-white">
@@ -38,7 +31,14 @@ export async function SiteHeader() {
           <div className="bg-border h-px w-full" />
         </>
       )}
-      <div className="flex items-center justify-between gap-7 border-b border-[#d3d3d3] bg-white px-14 py-[1.125rem]">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-7 px-14 py-[1.125rem]",
+          overlay
+            ? "absolute inset-x-0 top-full bg-transparent"
+            : "border-b border-[#d3d3d3] bg-white",
+        )}
+      >
         <Link
           href="/"
           className="text-foreground font-serif text-xl leading-[1.375rem] font-medium italic md:text-2xl"
@@ -46,7 +46,7 @@ export async function SiteHeader() {
           Art by Vero Miller
         </Link>
         <nav className="text-foreground hidden flex-1 items-center justify-end gap-7 text-[0.8125rem] md:flex">
-          <SiteNav links={links} linkClassName="nav-link" />
+          <SiteNav links={NAV_LINKS} linkClassName="nav-link" />
         </nav>
         <div className="flex items-center gap-4">
           <CartDrawer
@@ -63,7 +63,7 @@ export async function SiteHeader() {
             }
           />
           <LanguageMarker primaryLanguage={primaryLanguage} />
-          <MobileNav links={links} primaryLanguage={primaryLanguage} />
+          <MobileNav links={NAV_LINKS} primaryLanguage={primaryLanguage} />
         </div>
       </div>
     </header>
