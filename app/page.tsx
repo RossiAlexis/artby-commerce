@@ -19,9 +19,9 @@ export default async function Home() {
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col">
+    <main className="relative flex min-h-full flex-1 flex-col">
       <ScrollToHash />
-      <SiteHeader />
+      <SiteHeader overlay />
       <div className="flex-1">
         <HeroSection
           coverImageUrl={settings.coverImageUrl}

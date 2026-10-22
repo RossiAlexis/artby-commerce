@@ -69,15 +69,19 @@ export default async function ArtworkDetailPage(props: {
         {galleryLabel}
       </Link>
       <div className="grid gap-10 md:grid-cols-2">
-        <ArtworkPhotos photos={artwork.photos} title={artwork.title} />
+        <ArtworkPhotos
+          photos={artwork.photos}
+          title={artwork.title}
+          sold={artwork.sold}
+        />
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-3 border-b border-[#E2D8CE] pb-5">
             <Badge
-              variant={artwork.sold ? "secondary" : "outline"}
+              variant={artwork.sold ? "default" : "outline"}
               className={cn(
                 "h-[1.75rem] w-[6.25rem] rounded-full border-transparent text-[0.6875rem] leading-4 font-medium tracking-wide uppercase",
                 artwork.sold
-                  ? "bg-[#1C1917] text-[#F3EAE0]"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-[#E6F0E9] text-[#4D5E51]",
               )}
             >
