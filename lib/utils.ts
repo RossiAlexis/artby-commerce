@@ -28,6 +28,14 @@ export function formatPrice(priceCents: number, currency: string) {
   }).format(priceCents / 100);
 }
 
+/** Currency code and amount as separate strings, so a price can sit on one baseline. */
+export function formatPriceParts(priceCents: number, currency: string) {
+  const formatted = formatPrice(priceCents, currency);
+  const match = formatted.match(/^(\S+?)[\u00a0\u202f\u2009 ]+(.+)$/);
+  if (!match) return { code: formatted, amount: "" };
+  return { code: match[1] ?? formatted, amount: match[2] ?? "" };
+}
+
 // The site's copy is consistently Rioplatense/Argentine Spanish (voseo:
 // "Sumate", "Creá", "Ingresá") — es-AR keeps date formatting consistent
 // with that, rather than each caller picking its own locale.
