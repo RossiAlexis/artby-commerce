@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "10mb",
     },
   },
+  // sharp's native binding dlopens libvips, which file tracing can't see.
+  outputFileTracingIncludes: {
+    "/admin/site-settings": [
+      "./node_modules/.pnpm/@img+sharp-libvips-*/node_modules/@img/sharp-libvips-*/lib/**/*",
+    ],
+  },
   images: {
     remotePatterns: [
       new URL(
