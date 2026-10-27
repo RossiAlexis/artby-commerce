@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import { materializeSharpLibvips } from "./scripts/materialize-sharp-libvips";
+
+materializeSharpLibvips();
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -7,10 +10,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "10mb",
     },
   },
-  // sharp's native binding dlopens libvips, which file tracing can't see.
+  // sharp's .node dlopens libvips from the sibling package on its RPATH
+  // ($ORIGIN/../../sharp-libvips-linux-x64/lib). materializeSharpLibvips()
+  // makes that sibling a real directory; this include puts it in the trace.
   outputFileTracingIncludes: {
     "/admin/site-settings": [
-      "./node_modules/.pnpm/@img+sharp-libvips-*/node_modules/@img/sharp-libvips-*/lib/**/*",
+      "./node_modules/.pnpm/@img+sharp-linux-x64@*/node_modules/@img/sharp-libvips-linux-x64/lib/**/*",
     ],
   },
   images: {
