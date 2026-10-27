@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { auth } from "@/auth";
 import { getCurrentCart } from "@/app/actions/cart";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { LanguageMarker } from "@/components/homepage/language-marker";
@@ -15,22 +14,15 @@ const NAV_LINKS = [
 ];
 
 export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
-  const [cart, settings, session] = await Promise.all([
+  const [cart, settings] = await Promise.all([
     getCurrentCart(),
     getSiteSettings(),
-    auth(),
   ]);
 
-  // "Mi cuenta" only makes sense once signed in — otherwise the link sends
-  // the Customer to sign in first (see lib/auth/require-customer.ts).
-  const accountLink = session?.user?.id
-    ? { href: "/cuenta", label: "Mi cuenta" }
-    : { href: "/cuenta/ingresar", label: "Ingresar" };
-  const links = [...NAV_LINKS, accountLink];
   const primaryLanguage = settings?.primaryLanguage === "en" ? "en" : "es";
 
   return (
-    <header className={cn(overlay && "absolute inset-x-0 top-0 z-20")}>
+    <header className={cn(overlay && "relative z-30")}>
       {settings?.announcementBar && (
         <>
           <div className="bg-foreground flex h-9 items-center justify-center text-center text-xs text-white">
@@ -42,7 +34,9 @@ export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       <div
         className={cn(
           "flex items-center justify-between gap-7 px-14 py-[1.125rem]",
-          overlay ? "bg-transparent" : "border-b border-[#d3d3d3] bg-white",
+          overlay
+            ? "absolute inset-x-0 top-full bg-transparent"
+            : "border-b border-[#d3d3d3] bg-white",
         )}
       >
         <Link
@@ -52,7 +46,7 @@ export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           Art by Vero Miller
         </Link>
         <nav className="text-foreground hidden flex-1 items-center justify-end gap-7 text-[0.8125rem] md:flex">
-          <SiteNav links={links} linkClassName="nav-link" />
+          <SiteNav links={NAV_LINKS} linkClassName="nav-link" />
         </nav>
         <div className="flex items-center gap-4">
           <CartDrawer
@@ -69,7 +63,7 @@ export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             }
           />
           <LanguageMarker primaryLanguage={primaryLanguage} />
-          <MobileNav links={links} primaryLanguage={primaryLanguage} />
+          <MobileNav links={NAV_LINKS} primaryLanguage={primaryLanguage} />
         </div>
       </div>
     </header>
