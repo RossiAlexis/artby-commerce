@@ -6,6 +6,7 @@ import { LanguageMarker } from "@/components/homepage/language-marker";
 import { MobileNav } from "@/components/homepage/mobile-nav";
 import { SiteNav } from "@/components/homepage/site-nav";
 import { getSiteSettings } from "@/lib/db/site-settings";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/galeria", label: "Galería" },
@@ -13,7 +14,7 @@ const NAV_LINKS = [
   { href: "/contacto", label: "Contacto" },
 ];
 
-export async function SiteHeader() {
+export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [cart, settings, session] = await Promise.all([
     getCurrentCart(),
     getSiteSettings(),
@@ -29,7 +30,7 @@ export async function SiteHeader() {
   const primaryLanguage = settings?.primaryLanguage === "en" ? "en" : "es";
 
   return (
-    <header>
+    <header className={cn(overlay && "absolute inset-x-0 top-0 z-20")}>
       {settings?.announcementBar && (
         <>
           <div className="bg-foreground flex h-9 items-center justify-center text-center text-xs text-white">
@@ -38,7 +39,12 @@ export async function SiteHeader() {
           <div className="bg-border h-px w-full" />
         </>
       )}
-      <div className="flex items-center justify-between gap-7 border-b border-[#d3d3d3] bg-white px-14 py-[1.125rem]">
+      <div
+        className={cn(
+          "flex items-center justify-between gap-7 px-14 py-[1.125rem]",
+          overlay ? "bg-transparent" : "border-b border-[#d3d3d3] bg-white",
+        )}
+      >
         <Link
           href="/"
           className="text-foreground font-serif text-xl leading-[1.375rem] font-medium italic md:text-2xl"
